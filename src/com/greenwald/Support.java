@@ -13,10 +13,16 @@ public class Support {
     }
 
     public static int mod(int a, int b){
+        if(b == 0){
+            return 0;
+        }
         return (a % b + b) % b;
     }
 
     public static double mod(double a, double b){
+        if(b == 0.0){
+            return 0.0;
+        }
         return (a % b + b) % b;
     }
 

@@ -29,7 +29,7 @@ public class Game {
     }
 
     //constructor for a new game given certain constraints
-    public Game(int minNumCampaigns, int maxNumCampaigns, double minPricePerCampaign, double maxPricePerCampaign,int minImpressionsPerCampaign, int maxImpressionsPerCampaign, int minNumUserSets, int maxNumUserSets, int minUsersPerSet, int maxUsersPerSet){
+    public Game(int minNumCampaigns, int maxNumCampaigns, double minPricePerCampaign, double maxPricePerCampaign,int minImpressionsPerCampaign, int maxImpressionsPerCampaign, int minNumUserSets, int maxNumUserSets, int minUsersPerSet, int maxUsersPerSet, double ratioOfConnections){
         //RNG setup
         int campaignSpread = maxNumCampaigns - minNumCampaigns;
         double campaignPriceSpread = maxPricePerCampaign - minPricePerCampaign;
@@ -70,9 +70,10 @@ public class Game {
         }
 
         i = 0;
+        int minConnections = (int) Math.floor(numUserSets*ratioOfConnections);
         while(i<numCampaigns){
             java.util.Collections.shuffle(userListBasis);
-            int numConnections = Support.adjustRand(rand.nextInt(),numUserSets - 1,1);
+            int numConnections = Support.adjustRand(rand.nextInt(),numUserSets-minConnections,minConnections);
 
             int j = 0;
             while(j<numConnections){
@@ -99,7 +100,8 @@ public class Game {
         int maxNumUserSets = 10;
         int minUsersPerSet = 100;
         int maxUsersPerSet = 1000;
+        double ratioOfConnections = .5;
 
-        return new Game(minNumCampaigns,maxNumCampaigns,minPricePerCampaign,maxPricePerCampaign,minImpressionsPerCampaign,maxImpressionsPerCampaign,minNumUserSets,maxNumUserSets,minUsersPerSet,maxUsersPerSet);
+        return new Game(minNumCampaigns,maxNumCampaigns,minPricePerCampaign,maxPricePerCampaign,minImpressionsPerCampaign,maxImpressionsPerCampaign,minNumUserSets,maxNumUserSets,minUsersPerSet,maxUsersPerSet,ratioOfConnections);
     }
 }
