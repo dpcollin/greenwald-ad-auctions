@@ -3,7 +3,7 @@ package com.greenwald;
 public class Main {
 
     public static void main(String[] args) {
-	    Game newGame = new Game(7,7,1,10,1,1,7,7,1,1,.8);
+	    Game newGame = new Game(3,3,1,10,1,1,3,3,1,1,.8);
         returnSet returnSet = Waterfall.Waterfall(newGame);
         Allocation[][] exhaustive = Exhaustive.Exhaustive(newGame);
         printAllocation2D(returnSet.allocations);

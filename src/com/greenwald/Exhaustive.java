@@ -2,6 +2,7 @@ package com.greenwald;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 
 /**
  * Created by Daniel on 10/7/15.
@@ -56,8 +57,14 @@ public class Exhaustive {
                 clonedSol[campaign][userSet] = new Allocation(game.campaigns[campaign].valuePerImpression,1);
                 clonedIsUserTaken[userSet] = true;
                 newValue += game.campaigns[campaign].valuePerImpression;
+            }else{
+                return;
             }
             iterator(game,clonedSol,sols,clonedIsUserTaken,newValue,values,campaign+1);
         }
+        Allocation[][] clonedSol = Allocation.copy2D(sol);
+        boolean[] clonedIsUserTaken = Arrays.copyOf(isUserTaken,isUserTaken.length);
+        double newValue = value;
+        iterator(game,clonedSol,sols,clonedIsUserTaken,newValue,values,campaign+1);
     }
 }
