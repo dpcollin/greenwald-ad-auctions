@@ -58,7 +58,7 @@ public class Exhaustive {
                 clonedIsUserTaken[userSet] = true;
                 newValue += game.campaigns[campaign].valuePerImpression;
             }else{
-                return;
+                continue;
             }
             iterator(game,clonedSol,sols,clonedIsUserTaken,newValue,values,campaign+1);
         }

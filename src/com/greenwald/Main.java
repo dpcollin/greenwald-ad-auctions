@@ -3,11 +3,13 @@ package com.greenwald;
 public class Main {
 
     public static void main(String[] args) {
-	    Game newGame = new Game(3,3,1,10,1,1,3,3,1,1,.8);
+	    Game newGame = new Game(8,8,1,10,1,1,6,6,1,1,.5);
         returnSet returnSet = Waterfall.Waterfall(newGame);
         Allocation[][] exhaustive = Exhaustive.Exhaustive(newGame);
         printAllocation2D(returnSet.allocations);
         printAllocation2D(exhaustive);
+        System.out.println(getAllocationValue(newGame,returnSet.allocations));
+        System.out.println(getAllocationValue(newGame,exhaustive));
         System.out.println("hello");
     }
 
@@ -26,4 +28,17 @@ public class Main {
         System.out.printf("\n");
     }
 
+    public static double getAllocationValue(Game game,Allocation[][] allocations){
+        double value = 0;
+        for (int i = 0; i < allocations.length; i++) {
+            int userCount = 0;
+            for (int j = 0; j < allocations[0].length; j++) {
+                userCount+=allocations[i][j].num_customers;
+            }
+            if(userCount==game.campaigns[i].numImpressions){
+                value+=game.campaigns[i].totalValue;
+            }
+        }
+        return value;
+    }
 }
