@@ -1,16 +1,15 @@
 package adAuctions.test;
 
-import java.util.ArrayList;
 import adAuctions.algorithms.*;
 import adAuctions.structures.*;
 
 public class Main {
 
     public static void main(String[] args) {
-	    Game newGame = new Game(7,7,1,10,1,1,7,7,1,1,.5);
-        returnSet returnSet = Waterfall.Waterfall(newGame);
+	    Market newGame = new Market(7,7,1,10,1,1,7,7,1,1,.5);
+        returnSet returnSet = Waterfall.WaterfallAlgorithm(newGame);
         Exhaustive exhaustive = new Exhaustive();
-        ArrayList<Allocation[][]> exhaustiveSet = exhaustive.search(newGame);
+        //ArrayList<Allocation[][]> exhaustiveSet = exhaustive.search(newGame);
         System.out.println("Waterfall");
         printAllocation2D(returnSet.allocations);
         System.out.println("----------------------");
@@ -45,7 +44,7 @@ public class Main {
         System.out.printf("\n");
     }
 
-    public static double getAllocationValue(Game game,Allocation[][] allocations){
+    public static double getAllocationValue(Market game,Allocation[][] allocations){
         double value = 0;
         for (int i = 0; i < allocations.length; i++) {
             int userCount = 0;

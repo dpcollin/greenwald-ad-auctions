@@ -6,9 +6,9 @@ import adAuctions.structures.*;
  * Created by Daniel on 9/28/15.
  */
 public class Waterfall {
-    public static returnSet Waterfall(Game start){
+    public static returnSet WaterfallAlgorithm(Market start){
         Allocation[][] allocations = new Allocation[start.campaigns.length][start.userSets.length];
-        Game modifyableGame = new Game(start);
+        Market modifyableGame = new Market(start);
         boolean[] isCampaignFeasible = new boolean[start.campaigns.length];
         boolean[] isUserSetEmpty = new boolean[start.userSets.length];
         double[] minObservedPrices = new double[start.campaigns.length];
@@ -132,7 +132,7 @@ public class Waterfall {
         return new returnSet(allocations,modifyableGame);
     }
 
-    private static int calculateSupply(Game game, int campaignIndex){
+    private static int calculateSupply(Market game, int campaignIndex){
         Campaign target = game.campaigns[campaignIndex];
         int count = 0;
 

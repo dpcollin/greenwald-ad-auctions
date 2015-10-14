@@ -41,4 +41,7 @@ public class Campaign {
         this.totalValue -= (impressionsLost * valuePerImpression);
         this.valuePerImpression = this.totalValue/this.numImpressions;
     }
+    public double getReward(){
+    	return this.totalValue;
+    }    
 }

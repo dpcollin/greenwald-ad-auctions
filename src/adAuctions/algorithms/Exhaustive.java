@@ -19,7 +19,7 @@ public class Exhaustive {
         this.sols = new ArrayList<>();
     }
 
-    public ArrayList<Allocation[][]> search(Game start){
+    public ArrayList<Allocation[][]> search(Market start){
         Allocation[][] sol = new Allocation[start.campaigns.length][start.userSets.length];
         boolean[] isUserTaken = new boolean[start.userSets.length];
 
@@ -49,7 +49,7 @@ public class Exhaustive {
         return this.sols;//.get(maxindex);
     }
 
-    public void iterator(Game game,Allocation[][] sol, boolean[] isUserTaken, Double value, int campaign){
+    public void iterator(Market game,Allocation[][] sol, boolean[] isUserTaken, Double value, int campaign){
         if(campaign == game.campaigns.length){
             if(value < maxValue){
                 return;

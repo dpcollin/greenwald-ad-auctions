@@ -16,13 +16,18 @@ public class UserSet {
     public double price;
     public double reserve;
 
+    /*
+     * Constructor. Receives only the number of users.
+     */
     public UserSet(int numUsers){
         this.numUsers = numUsers;
         this.connections = new ArrayList<>();
         //reserve set to 0 by default
         this.reserve = 0;
     }
-
+    /*
+     * Constructor. Receives both the number of users and price. 
+     */
     public UserSet(int numUsers, double price){
         this.numUsers = numUsers;
         this.connections = new ArrayList<>();
@@ -30,10 +35,19 @@ public class UserSet {
         this.reserve = 0;
     }
 
+    /*
+     * Constructor that copies a user set into this one
+     */
     public UserSet(UserSet userSet){
         this.numUsers = userSet.numUsers;
         this.connections = userSet.connections;
         this.price = userSet.price;
         this.reserve = userSet.reserve;
     }
+    /*
+     * Getters
+     */
+    public int getNumUsers(){
+    	return this.numUsers;
+    }    
 }

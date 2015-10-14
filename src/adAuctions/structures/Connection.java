@@ -9,8 +9,8 @@ package adAuctions.structures;
  */
 
 public class Connection {
-    int campaignIndex;
-    int userIndex;
+    public int campaignIndex;
+    public int userIndex;
 
     public Connection(int campaignIndex, int userIndex){
         this.campaignIndex = campaignIndex;
