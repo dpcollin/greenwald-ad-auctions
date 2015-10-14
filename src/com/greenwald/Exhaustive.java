@@ -10,15 +10,15 @@ import java.util.Arrays;
 //only applies to unit impressions available/wanted per campaign
 public class Exhaustive {
     double maxValue;
+    ArrayList<Allocation[][]> sols;
 
     public Exhaustive(){
         this.maxValue = 0;
+        this.sols = new ArrayList<>();
     }
 
     public ArrayList<Allocation[][]> search(Game start){
-        ArrayList<Allocation[][]> sols = new ArrayList<>();
         Allocation[][] sol = new Allocation[start.campaigns.length][start.userSets.length];
-        ArrayList<Double> values = new ArrayList<>();
         boolean[] isUserTaken = new boolean[start.userSets.length];
 
         for (int i = 0; i < start.campaigns.length; i++) {
@@ -32,7 +32,7 @@ public class Exhaustive {
         }
 
 
-        iterator(start,sol,sols,isUserTaken,0.0,values,0);
+        iterator(start,sol,isUserTaken,0.0,0);
         /*
         int maxindex = -1;
         double maxvalue = 0.0;
@@ -44,20 +44,18 @@ public class Exhaustive {
             }
         }*/
 
-        return sols;//.get(maxindex);
+        return this.sols;//.get(maxindex);
     }
 
-    public void iterator(Game game,Allocation[][] sol, ArrayList<Allocation[][]> sols, boolean[] isUserTaken, Double value, ArrayList<Double> values, int campaign){
+    public void iterator(Game game,Allocation[][] sol, boolean[] isUserTaken, Double value, int campaign){
         if(campaign == game.campaigns.length){
             if(value < maxValue){
                 return;
             }else if(value > maxValue){
-                sols = new ArrayList<>();
-                values = new ArrayList<>();
+                this.sols = new ArrayList<>();
                 maxValue = value;
             }
-            sols.add(sol);
-            values.add(value);
+            this.sols.add(sol);
             return;
         }
 
@@ -83,11 +81,11 @@ public class Exhaustive {
             }else{
                 continue;
             }
-            iterator(game,clonedSol,sols,clonedIsUserTaken,newValue,values,campaign+1);
+            iterator(game,clonedSol,clonedIsUserTaken,newValue,campaign+1);
         }
         Allocation[][] clonedSol = Allocation.copy2D(sol);
         boolean[] clonedIsUserTaken = Arrays.copyOf(isUserTaken,isUserTaken.length);
         double newValue = value;
-        iterator(game,clonedSol,sols,clonedIsUserTaken,newValue,values,campaign+1);
+        iterator(game,clonedSol,clonedIsUserTaken,newValue,campaign+1);
     }
 }

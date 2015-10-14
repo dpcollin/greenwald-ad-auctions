@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Main {
 
     public static void main(String[] args) {
-	    Game newGame = new Game(9,9,1,10,1,1,9,9,1,1,.5);
+	    Game newGame = new Game(7,7,1,10,1,1,7,7,1,1,.5);
         returnSet returnSet = Waterfall.Waterfall(newGame);
         Exhaustive exhaustive = new Exhaustive();
         ArrayList<Allocation[][]> exhaustiveSet = exhaustive.search(newGame);
