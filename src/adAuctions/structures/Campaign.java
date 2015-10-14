@@ -1,4 +1,4 @@
-package com.greenwald;
+package adAuctions.structures;
 
 /**
  * Created by Daniel on 9/25/15.
@@ -11,10 +11,10 @@ import java.util.ArrayList;
  */
 
 public class Campaign {
-    int numImpressions;
-    double valuePerImpression;
-    double totalValue;
-    ArrayList<Integer> connections;
+    public int numImpressions;
+    public double valuePerImpression;
+    public double totalValue;
+    public ArrayList<Integer> connections;
 
     public Campaign(int numImpressions, double valuePerImpression){
         this.numImpressions = numImpressions;

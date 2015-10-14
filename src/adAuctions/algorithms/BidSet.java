@@ -1,4 +1,4 @@
-package com.greenwald;
+package adAuctions.algorithms;
 
 /**
  * Created by Daniel on 9/30/15.
@@ -9,7 +9,7 @@ public class BidSet {
     int secondIndex;
     double secondValue;
 
-    public BidSet(int highIndex,double highValue){
+    public BidSet(int highIndex, double highValue){
         this.highIndex = highIndex;
         this.highValue = highValue;
         this.secondValue = -1.;

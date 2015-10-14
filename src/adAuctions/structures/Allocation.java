@@ -1,4 +1,4 @@
-package com.greenwald;
+package adAuctions.structures;
 
 /**
  * Created by Daniel on 9/30/15.

@@ -1,4 +1,4 @@
-package com.greenwald;
+package adAuctions.structures;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -12,9 +12,9 @@ import java.util.Random;
  * Contains an initializer to generate a random game based upon some given restrictions
  */
 public class Game {
-    Campaign[] campaigns;
-    UserSet[] userSets;
-    Connection[] connections;
+    public Campaign[] campaigns;
+    public UserSet[] userSets;
+    public Connection[] connections;
 
     public Game(Campaign[] campaigns, UserSet[] userSets, Connection[] connections){
         this.campaigns = campaigns;

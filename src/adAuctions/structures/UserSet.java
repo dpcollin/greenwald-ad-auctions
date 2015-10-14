@@ -1,4 +1,4 @@
-package com.greenwald;
+package adAuctions.structures;
 
 /**
  * Created by Daniel on 9/25/15.
@@ -10,11 +10,11 @@ import java.util.ArrayList;
  * Represents a set of users with a single price
  */
 public class UserSet {
-    int numUsers;
-    ArrayList<Integer> connections;
+    public int numUsers;
+    public ArrayList<Integer> connections;
     //price is uninitialized, exists for later use if necessary
-    double price;
-    double reserve;
+    public double price;
+    public double reserve;
 
     public UserSet(int numUsers){
         this.numUsers = numUsers;

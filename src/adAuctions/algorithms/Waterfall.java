@@ -1,4 +1,6 @@
-package com.greenwald;
+package adAuctions.algorithms;
+
+import adAuctions.structures.*;
 
 /**
  * Created by Daniel on 9/28/15.

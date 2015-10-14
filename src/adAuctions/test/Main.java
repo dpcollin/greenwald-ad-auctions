@@ -1,6 +1,8 @@
-package com.greenwald;
+package adAuctions.test;
 
 import java.util.ArrayList;
+import adAuctions.algorithms.*;
+import adAuctions.structures.*;
 
 public class Main {
 

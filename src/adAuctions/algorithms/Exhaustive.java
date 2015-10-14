@@ -1,4 +1,6 @@
-package com.greenwald;
+package adAuctions.algorithms;
+
+import adAuctions.structures.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,8 +11,8 @@ import java.util.Arrays;
 
 //only applies to unit impressions available/wanted per campaign
 public class Exhaustive {
-    double maxValue;
-    ArrayList<Allocation[][]> sols;
+    public double maxValue;
+    public ArrayList<Allocation[][]> sols;
 
     public Exhaustive(){
         this.maxValue = 0;
