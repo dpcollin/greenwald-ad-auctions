@@ -2,7 +2,6 @@ package com.greenwald;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 
 /**
  * Created by Daniel on 10/7/15.
@@ -10,7 +9,13 @@ import java.util.LinkedList;
 
 //only applies to unit impressions available/wanted per campaign
 public class Exhaustive {
-    public static Allocation[][] Exhaustive(Game start){
+    double maxValue;
+
+    public Exhaustive(){
+        this.maxValue = 0;
+    }
+
+    public ArrayList<Allocation[][]> search(Game start){
         ArrayList<Allocation[][]> sols = new ArrayList<>();
         Allocation[][] sol = new Allocation[start.campaigns.length][start.userSets.length];
         ArrayList<Double> values = new ArrayList<>();
@@ -28,6 +33,7 @@ public class Exhaustive {
 
 
         iterator(start,sol,sols,isUserTaken,0.0,values,0);
+        /*
         int maxindex = -1;
         double maxvalue = 0.0;
 
@@ -36,17 +42,34 @@ public class Exhaustive {
                 maxindex = i;
                 maxvalue = values.get(i);
             }
-        }
+        }*/
 
-        return sols.get(maxindex);
+        return sols;//.get(maxindex);
     }
 
-    public static void iterator(Game game,Allocation[][] sol, ArrayList<Allocation[][]> sols, boolean[] isUserTaken, Double value, ArrayList<Double> values, int campaign){
+    public void iterator(Game game,Allocation[][] sol, ArrayList<Allocation[][]> sols, boolean[] isUserTaken, Double value, ArrayList<Double> values, int campaign){
         if(campaign == game.campaigns.length){
+            if(value < maxValue){
+                return;
+            }else if(value > maxValue){
+                sols = new ArrayList<>();
+                values = new ArrayList<>();
+                maxValue = value;
+            }
             sols.add(sol);
             values.add(value);
             return;
         }
+
+        double maxValHere = value;
+        for (int i = campaign; i < game.campaigns.length; i++) {
+            maxValHere += game.campaigns[i].totalValue;
+        }
+
+        if(maxValHere < this.maxValue){
+            return;
+        }
+
 
         for (int i = 0; i < game.campaigns[campaign].connections.size(); i++) {
             int userSet = game.campaigns[campaign].connections.get(i);

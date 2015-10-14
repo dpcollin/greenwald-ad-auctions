@@ -1,15 +1,30 @@
 package com.greenwald;
 
+import java.util.ArrayList;
+
 public class Main {
 
     public static void main(String[] args) {
-	    Game newGame = new Game(8,8,1,10,1,1,6,6,1,1,.5);
+	    Game newGame = new Game(9,9,1,10,1,1,9,9,1,1,.5);
         returnSet returnSet = Waterfall.Waterfall(newGame);
-        Allocation[][] exhaustive = Exhaustive.Exhaustive(newGame);
+        Exhaustive exhaustive = new Exhaustive();
+        ArrayList<Allocation[][]> exhaustiveSet = exhaustive.search(newGame);
+        System.out.println("Waterfall");
         printAllocation2D(returnSet.allocations);
-        printAllocation2D(exhaustive);
-        System.out.println(getAllocationValue(newGame,returnSet.allocations));
-        System.out.println(getAllocationValue(newGame,exhaustive));
+        System.out.println("----------------------");
+        /*
+        for (int i = 0; i < exhaustiveSet.size(); i++) {
+            System.out.printf("Exhaustive Allocation %d\n", i);
+            printAllocation2D(exhaustiveSet.get(i));
+        }
+        */
+        System.out.println("Waterfall Value");
+        double WaterfallValue = getAllocationValue(newGame,returnSet.allocations);
+        System.out.println(WaterfallValue);
+        System.out.println("Exhaustive Value");
+        System.out.println(exhaustive.maxValue);
+        System.out.println("Waterfall Efficiency Ratio");
+        System.out.println(WaterfallValue/exhaustive.maxValue);
         System.out.println("hello");
     }
 
