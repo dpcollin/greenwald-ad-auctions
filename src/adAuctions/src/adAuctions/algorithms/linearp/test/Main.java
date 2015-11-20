@@ -7,8 +7,8 @@ import adAuctions.algorithms.linearp.Latex;
 public class Main {
 	
 	public static void main(String args[]) throws IOException{
-		MarketFactory.createMultipleMonoMarkets();
-		System.exit(0);
+		//MarketFactory.createMultipleMonoMarkets();
+		//System.exit(0);
 		if(args.length <4){
 			throw new RuntimeException("need at least 4 parameters to run: int minNumCamp, int maxNumCamp,int minNumUser,int maxNumUser");
 		}else{

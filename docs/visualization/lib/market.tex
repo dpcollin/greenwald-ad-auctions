@@ -1,0 +1,451 @@
+\documentclass[12pt,letterpaper]{article}
+\usepackage{fullpage}
+\usepackage[top=2cm, bottom=4.5cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage{amsmath,amsthm,amsfonts,amssymb,amscd}
+\usepackage{lastpage}
+\usepackage{enumerate}
+\usepackage{fancyhdr}
+\usepackage{mathrsfs}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{mathtools}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{tcolorbox}
+\usetikzlibrary{positioning,chains,fit,shapes,calc}
+%% download this package and put it in the same directory as this file
+%\usepackage{clrscode3e}
+\setlength{\parindent}{0.0in}
+\setlength{\parskip}{0.05in}
+
+\newcommand{\Campaign}{c}
+\newcommand{\CampaignIndex}{j}
+\newcommand{\Campaigns}{C}
+\newcommand{\CardinalityCampaigns}{m}
+\newcommand{\User}{u}
+\newcommand{\UserIndex}{i}
+\newcommand{\Users}{U}
+\newcommand{\CardinalityUsers}{n}
+\newcommand{\Market}{M}
+\newcommand{\Impressions}{I}
+\newcommand{\Reward}{R}
+\newcommand{\NumberOfUsers}{N}
+\newcommand{\Edges}{E}
+\newcommand{\Allocation}{A}
+\newcommand{\Price}{P}
+\newcommand{\AllocationMatrix}{X}
+\newcommand{\AllocationMatrixEntry}{x}
+
+
+
+\begin{document}
+\definecolor{myblue}{RGB}{80,80,160}
+\definecolor{mygreen}{RGB}{80,160,80}
+\definecolor{mywhite}{RGB}{255,255,255}
+
+
+\section*{Envy-Free Prices (as given by LP)}
+\subsection*{Parameters}
+\begin{enumerate}
+\item[] Number of Markets: 10
+\item[] Min. number of campaigns: 6
+\item[] Max. number of campaigns: 7
+\item[] Min. number of users: 6
+\item[] Max. number of users: 7
+\item[] Ratio of Connections: 0.1
+\end{enumerate}
+$$ \begin{tikzpicture}[thick, every node/.style={draw,circle}, fsnode/.style={fill=myblue}, ssnode/.style={fill=mygreen}, every fit/.style={ellipse,draw,inner sep=10pt,text width=2cm},-,shorten >= 3pt,shorten <= 3pt]
+% the vertices of U
+\begin{scope}[start chain=going below,node distance=7mm]
+\node[fsnode,on chain] (f0) [label=left: 16.00] {};
+\node[fsnode,on chain] (f1) [label=left: 16.00] {};
+\node[fsnode,on chain] (f2) [label=left: 16.00] {};
+\node[fsnode,on chain] (f3) [label=left: 16.00] {};
+\node[fsnode,on chain] (f4) [label=left: 99.86] {};
+\node[fsnode,on chain] (f5) [label=left: 16.00] {};
+\end{scope}
+% the vertices of C
+\begin{scope}[xshift=5cm,yshift=-0.1cm,start chain=going below,node distance=7mm]
+\node[ssnode,on chain] (s6) [label=right: \$45.57] {};
+\node[ssnode,on chain] (s7) [label=right: \$31.38] {};
+\node[ssnode,on chain] (s8) [label=right: \$99.86] {};
+\node[ssnode,on chain] (s9) [label=right: \$70.43] {};
+\node[ssnode,on chain] (s10) [label=right: \$80.72] {};
+\node[ssnode,on chain] (s11) [label=right: \$16.00] {};
+\end{scope}
+% the set U
+\node [mywhite,fit=(f0) (f1) (f2) (f3) (f4) (f5) ] {};
+% the set C
+\node [mywhite,fit=(s6) (s7) (s8) (s9) (s10) (s11) ] {};% the edges
+\draw[dotted] (f0) -- (s7);
+\draw (f0) -- (s8);
+\draw[dotted] (f0) -- (s9);
+\draw[dotted] (f1) -- (s8);
+\draw (f1) -- (s11);
+\draw (f2) -- (s9);
+\draw[dotted] (f3) -- (s6);
+\draw (f3) -- (s7);
+\draw[dotted] (f3) -- (s9);
+\draw[dotted] (f3) -- (s11);
+\draw[dotted] (f4) -- (s6);
+\draw[dotted] (f4) -- (s8);
+\draw (f5) -- (s6);
+\draw[dotted] (f5) -- (s8);
+\draw[dotted] (f5) -- (s11);
+\end{tikzpicture} $$$$ \begin{tikzpicture}[thick, every node/.style={draw,circle}, fsnode/.style={fill=myblue}, ssnode/.style={fill=mygreen}, every fit/.style={ellipse,draw,inner sep=10pt,text width=2cm},-,shorten >= 3pt,shorten <= 3pt]
+% the vertices of U
+\begin{scope}[start chain=going below,node distance=7mm]
+\node[fsnode,on chain] (f0) [label=left: 17.45] {};
+\node[fsnode,on chain] (f1) [label=left: 65.48] {};
+\node[fsnode,on chain] (f2) [label=left: 17.45] {};
+\node[fsnode,on chain] (f3) [label=left: 17.45] {};
+\node[fsnode,on chain] (f4) [label=left: 65.48] {};
+\node[fsnode,on chain] (f5) [label=left: 17.45] {};
+\end{scope}
+% the vertices of C
+\begin{scope}[xshift=5cm,yshift=-0.1cm,start chain=going below,node distance=7mm]
+\node[ssnode,on chain] (s6) [label=right: \$17.45] {};
+\node[ssnode,on chain] (s7) [label=right: \$23.71] {};
+\node[ssnode,on chain] (s8) [label=right: \$53.19] {};
+\node[ssnode,on chain] (s9) [label=right: \$19.42] {};
+\node[ssnode,on chain] (s10) [label=right: \$65.48] {};
+\node[ssnode,on chain] (s11) [label=right: \$32.51] {};
+\end{scope}
+% the set U
+\node [mywhite,fit=(f0) (f1) (f2) (f3) (f4) (f5) ] {};
+% the set C
+\node [mywhite,fit=(s6) (s7) (s8) (s9) (s10) (s11) ] {};% the edges
+\draw (f0) -- (s6);
+\draw[dotted] (f0) -- (s7);
+\draw[dotted] (f0) -- (s9);
+\draw[dotted] (f1) -- (s7);
+\draw[dotted] (f1) -- (s11);
+\draw[dotted] (f2) -- (s6);
+\draw[dotted] (f2) -- (s7);
+\draw (f2) -- (s11);
+\draw[dotted] (f3) -- (s6);
+\draw (f3) -- (s7);
+\draw[dotted] (f3) -- (s11);
+\draw[dotted] (f4) -- (s9);
+\draw[dotted] (f4) -- (s11);
+\draw[dotted] (f5) -- (s6);
+\draw[dotted] (f5) -- (s7);
+\draw (f5) -- (s9);
+\draw[dotted] (f5) -- (s11);
+\end{tikzpicture} $$$$ \begin{tikzpicture}[thick, every node/.style={draw,circle}, fsnode/.style={fill=myblue}, ssnode/.style={fill=mygreen}, every fit/.style={ellipse,draw,inner sep=10pt,text width=2cm},-,shorten >= 3pt,shorten <= 3pt]
+% the vertices of U
+\begin{scope}[start chain=going below,node distance=7mm]
+\node[fsnode,on chain] (f0) [label=left: 1.06] {};
+\node[fsnode,on chain] (f1) [label=left: 74.16] {};
+\node[fsnode,on chain] (f2) [label=left: 1.06] {};
+\node[fsnode,on chain] (f3) [label=left: 1.06] {};
+\node[fsnode,on chain] (f4) [label=left: 1.06] {};
+\node[fsnode,on chain] (f5) [label=left: 1.06] {};
+\end{scope}
+% the vertices of C
+\begin{scope}[xshift=5cm,yshift=-0.1cm,start chain=going below,node distance=7mm]
+\node[ssnode,on chain] (s6) [label=right: \$9.18] {};
+\node[ssnode,on chain] (s7) [label=right: \$62.59] {};
+\node[ssnode,on chain] (s8) [label=right: \$74.16] {};
+\node[ssnode,on chain] (s9) [label=right: \$54.61] {};
+\node[ssnode,on chain] (s10) [label=right: \$1.06] {};
+\node[ssnode,on chain] (s11) [label=right: \$12.85] {};
+\end{scope}
+% the set U
+\node [mywhite,fit=(f0) (f1) (f2) (f3) (f4) (f5) ] {};
+% the set C
+\node [mywhite,fit=(s6) (s7) (s8) (s9) (s10) (s11) ] {};% the edges
+\draw (f0) -- (s7);
+\draw[dotted] (f2) -- (s6);
+\draw[dotted] (f2) -- (s9);
+\draw (f2) -- (s10);
+\draw[dotted] (f3) -- (s6);
+\draw (f3) -- (s8);
+\draw (f4) -- (s6);
+\draw[dotted] (f4) -- (s8);
+\draw[dotted] (f4) -- (s9);
+\draw[dotted] (f5) -- (s7);
+\draw[dotted] (f5) -- (s8);
+\draw (f5) -- (s9);
+\end{tikzpicture} $$$$ \begin{tikzpicture}[thick, every node/.style={draw,circle}, fsnode/.style={fill=myblue}, ssnode/.style={fill=mygreen}, every fit/.style={ellipse,draw,inner sep=10pt,text width=2cm},-,shorten >= 3pt,shorten <= 3pt]
+% the vertices of U
+\begin{scope}[start chain=going below,node distance=7mm]
+\node[fsnode,on chain] (f0) [label=left: 23.63] {};
+\node[fsnode,on chain] (f1) [label=left: 86.10] {};
+\node[fsnode,on chain] (f2) [label=left: 23.63] {};
+\node[fsnode,on chain] (f3) [label=left: 23.63] {};
+\node[fsnode,on chain] (f4) [label=left: 23.63] {};
+\node[fsnode,on chain] (f5) [label=left: 23.63] {};
+\end{scope}
+% the vertices of C
+\begin{scope}[xshift=5cm,yshift=-0.1cm,start chain=going below,node distance=7mm]
+\node[ssnode,on chain] (s6) [label=right: \$84.30] {};
+\node[ssnode,on chain] (s7) [label=right: \$42.56] {};
+\node[ssnode,on chain] (s8) [label=right: \$72.99] {};
+\node[ssnode,on chain] (s9) [label=right: \$86.10] {};
+\node[ssnode,on chain] (s10) [label=right: \$23.63] {};
+\node[ssnode,on chain] (s11) [label=right: \$93.98] {};
+\end{scope}
+% the set U
+\node [mywhite,fit=(f0) (f1) (f2) (f3) (f4) (f5) ] {};
+% the set C
+\node [mywhite,fit=(s6) (s7) (s8) (s9) (s10) (s11) ] {};% the edges
+\draw[dotted] (f0) -- (s7);
+\draw (f0) -- (s8);
+\draw[dotted] (f0) -- (s10);
+\draw[dotted] (f0) -- (s11);
+\draw[dotted] (f1) -- (s6);
+\draw[dotted] (f1) -- (s7);
+\draw (f1) -- (s9);
+\draw (f2) -- (s11);
+\draw[dotted] (f3) -- (s7);
+\draw[dotted] (f3) -- (s8);
+\draw (f3) -- (s10);
+\draw[dotted] (f3) -- (s11);
+\draw[dotted] (f4) -- (s6);
+\draw (f4) -- (s7);
+\draw (f5) -- (s6);
+\draw[dotted] (f5) -- (s7);
+\draw[dotted] (f5) -- (s8);
+\draw[dotted] (f5) -- (s10);
+\draw[dotted] (f5) -- (s11);
+\end{tikzpicture} $$$$ \begin{tikzpicture}[thick, every node/.style={draw,circle}, fsnode/.style={fill=myblue}, ssnode/.style={fill=mygreen}, every fit/.style={ellipse,draw,inner sep=10pt,text width=2cm},-,shorten >= 3pt,shorten <= 3pt]
+% the vertices of U
+\begin{scope}[start chain=going below,node distance=7mm]
+\node[fsnode,on chain] (f0) [label=left: 1.81] {};
+\node[fsnode,on chain] (f1) [label=left: 76.43] {};
+\node[fsnode,on chain] (f2) [label=left: 1.81] {};
+\node[fsnode,on chain] (f3) [label=left: 1.81] {};
+\node[fsnode,on chain] (f4) [label=left: 1.81] {};
+\node[fsnode,on chain] (f5) [label=left: 1.81] {};
+\end{scope}
+% the vertices of C
+\begin{scope}[xshift=5cm,yshift=-0.1cm,start chain=going below,node distance=7mm]
+\node[ssnode,on chain] (s6) [label=right: \$1.81] {};
+\node[ssnode,on chain] (s7) [label=right: \$61.77] {};
+\node[ssnode,on chain] (s8) [label=right: \$23.34] {};
+\node[ssnode,on chain] (s9) [label=right: \$44.52] {};
+\node[ssnode,on chain] (s10) [label=right: \$76.43] {};
+\node[ssnode,on chain] (s11) [label=right: \$46.77] {};
+\end{scope}
+% the set U
+\node [mywhite,fit=(f0) (f1) (f2) (f3) (f4) (f5) ] {};
+% the set C
+\node [mywhite,fit=(s6) (s7) (s8) (s9) (s10) (s11) ] {};% the edges
+\draw (f0) -- (s6);
+\draw[dotted] (f0) -- (s7);
+\draw[dotted] (f0) -- (s10);
+\draw[dotted] (f0) -- (s11);
+\draw[dotted] (f1) -- (s10);
+\draw (f2) -- (s8);
+\draw[dotted] (f2) -- (s10);
+\draw[dotted] (f2) -- (s11);
+\draw[dotted] (f3) -- (s8);
+\draw (f3) -- (s10);
+\draw[dotted] (f4) -- (s7);
+\draw (f4) -- (s11);
+\draw (f5) -- (s7);
+\draw[dotted] (f5) -- (s8);
+\draw[dotted] (f5) -- (s10);
+\draw[dotted] (f5) -- (s11);
+\end{tikzpicture} $$$$ \begin{tikzpicture}[thick, every node/.style={draw,circle}, fsnode/.style={fill=myblue}, ssnode/.style={fill=mygreen}, every fit/.style={ellipse,draw,inner sep=10pt,text width=2cm},-,shorten >= 3pt,shorten <= 3pt]
+% the vertices of U
+\begin{scope}[start chain=going below,node distance=7mm]
+\node[fsnode,on chain] (f0) [label=left: 99.00] {};
+\node[fsnode,on chain] (f1) [label=left: 9.11] {};
+\node[fsnode,on chain] (f2) [label=left: 9.11] {};
+\node[fsnode,on chain] (f3) [label=left: 9.11] {};
+\node[fsnode,on chain] (f4) [label=left: 9.11] {};
+\node[fsnode,on chain] (f5) [label=left: 9.11] {};
+\end{scope}
+% the vertices of C
+\begin{scope}[xshift=5cm,yshift=-0.1cm,start chain=going below,node distance=7mm]
+\node[ssnode,on chain] (s6) [label=right: \$51.95] {};
+\node[ssnode,on chain] (s7) [label=right: \$99.00] {};
+\node[ssnode,on chain] (s8) [label=right: \$45.72] {};
+\node[ssnode,on chain] (s9) [label=right: \$28.39] {};
+\node[ssnode,on chain] (s10) [label=right: \$43.85] {};
+\node[ssnode,on chain] (s11) [label=right: \$9.11] {};
+\end{scope}
+% the set U
+\node [mywhite,fit=(f0) (f1) (f2) (f3) (f4) (f5) ] {};
+% the set C
+\node [mywhite,fit=(s6) (s7) (s8) (s9) (s10) (s11) ] {};% the edges
+\draw[dotted] (f0) -- (s8);
+\draw (f1) -- (s8);
+\draw[dotted] (f1) -- (s10);
+\draw (f2) -- (s7);
+\draw[dotted] (f2) -- (s8);
+\draw[dotted] (f2) -- (s10);
+\draw (f3) -- (s6);
+\draw[dotted] (f3) -- (s7);
+\draw[dotted] (f3) -- (s8);
+\draw[dotted] (f3) -- (s11);
+\draw[dotted] (f4) -- (s6);
+\draw (f4) -- (s10);
+\draw[dotted] (f5) -- (s7);
+\draw[dotted] (f5) -- (s8);
+\draw (f5) -- (s11);
+\end{tikzpicture} $$$$ \begin{tikzpicture}[thick, every node/.style={draw,circle}, fsnode/.style={fill=myblue}, ssnode/.style={fill=mygreen}, every fit/.style={ellipse,draw,inner sep=10pt,text width=2cm},-,shorten >= 3pt,shorten <= 3pt]
+% the vertices of U
+\begin{scope}[start chain=going below,node distance=7mm]
+\node[fsnode,on chain] (f0) [label=left: 24.04] {};
+\node[fsnode,on chain] (f1) [label=left: 98.72] {};
+\node[fsnode,on chain] (f2) [label=left: 98.72] {};
+\node[fsnode,on chain] (f3) [label=left: 24.04] {};
+\node[fsnode,on chain] (f4) [label=left: 24.04] {};
+\node[fsnode,on chain] (f5) [label=left: 79.52] {};
+\end{scope}
+% the vertices of C
+\begin{scope}[xshift=5cm,yshift=-0.1cm,start chain=going below,node distance=7mm]
+\node[ssnode,on chain] (s6) [label=right: \$47.24] {};
+\node[ssnode,on chain] (s7) [label=right: \$31.91] {};
+\node[ssnode,on chain] (s8) [label=right: \$98.72] {};
+\node[ssnode,on chain] (s9) [label=right: \$79.52] {};
+\node[ssnode,on chain] (s10) [label=right: \$2.99] {};
+\node[ssnode,on chain] (s11) [label=right: \$24.04] {};
+\end{scope}
+% the set U
+\node [mywhite,fit=(f0) (f1) (f2) (f3) (f4) (f5) ] {};
+% the set C
+\node [mywhite,fit=(s6) (s7) (s8) (s9) (s10) (s11) ] {};% the edges
+\draw (f0) -- (s6);
+\draw[dotted] (f0) -- (s11);
+\draw[dotted] (f1) -- (s8);
+\draw[dotted] (f2) -- (s8);
+\draw[dotted] (f2) -- (s11);
+\draw[dotted] (f3) -- (s6);
+\draw[dotted] (f3) -- (s8);
+\draw (f3) -- (s11);
+\draw (f4) -- (s8);
+\draw[dotted] (f4) -- (s11);
+\draw[dotted] (f5) -- (s6);
+\draw[dotted] (f5) -- (s8);
+\draw (f5) -- (s9);
+\draw[dotted] (f5) -- (s11);
+\end{tikzpicture} $$$$ \begin{tikzpicture}[thick, every node/.style={draw,circle}, fsnode/.style={fill=myblue}, ssnode/.style={fill=mygreen}, every fit/.style={ellipse,draw,inner sep=10pt,text width=2cm},-,shorten >= 3pt,shorten <= 3pt]
+% the vertices of U
+\begin{scope}[start chain=going below,node distance=7mm]
+\node[fsnode,on chain] (f0) [label=left: 76.90] {};
+\node[fsnode,on chain] (f1) [label=left: 5.34] {};
+\node[fsnode,on chain] (f2) [label=left: 5.34] {};
+\node[fsnode,on chain] (f3) [label=left: 5.34] {};
+\node[fsnode,on chain] (f4) [label=left: 5.34] {};
+\node[fsnode,on chain] (f5) [label=left: 5.34] {};
+\end{scope}
+% the vertices of C
+\begin{scope}[xshift=5cm,yshift=-0.1cm,start chain=going below,node distance=7mm]
+\node[ssnode,on chain] (s6) [label=right: \$71.91] {};
+\node[ssnode,on chain] (s7) [label=right: \$5.34] {};
+\node[ssnode,on chain] (s8) [label=right: \$76.90] {};
+\node[ssnode,on chain] (s9) [label=right: \$21.67] {};
+\node[ssnode,on chain] (s10) [label=right: \$47.35] {};
+\node[ssnode,on chain] (s11) [label=right: \$61.91] {};
+\end{scope}
+% the set U
+\node [mywhite,fit=(f0) (f1) (f2) (f3) (f4) (f5) ] {};
+% the set C
+\node [mywhite,fit=(s6) (s7) (s8) (s9) (s10) (s11) ] {};% the edges
+\draw[dotted] (f0) -- (s6);
+\draw[dotted] (f1) -- (s6);
+\draw[dotted] (f1) -- (s7);
+\draw (f1) -- (s9);
+\draw[dotted] (f2) -- (s6);
+\draw[dotted] (f2) -- (s7);
+\draw (f2) -- (s8);
+\draw[dotted] (f3) -- (s7);
+\draw[dotted] (f3) -- (s8);
+\draw[dotted] (f3) -- (s9);
+\draw (f3) -- (s11);
+\draw (f4) -- (s6);
+\draw[dotted] (f4) -- (s7);
+\draw[dotted] (f4) -- (s8);
+\draw[dotted] (f4) -- (s9);
+\draw[dotted] (f4) -- (s11);
+\draw[dotted] (f5) -- (s6);
+\draw (f5) -- (s7);
+\end{tikzpicture} $$$$ \begin{tikzpicture}[thick, every node/.style={draw,circle}, fsnode/.style={fill=myblue}, ssnode/.style={fill=mygreen}, every fit/.style={ellipse,draw,inner sep=10pt,text width=2cm},-,shorten >= 3pt,shorten <= 3pt]
+% the vertices of U
+\begin{scope}[start chain=going below,node distance=7mm]
+\node[fsnode,on chain] (f0) [label=left: 2.34] {};
+\node[fsnode,on chain] (f1) [label=left: 96.78] {};
+\node[fsnode,on chain] (f2) [label=left: 2.34] {};
+\node[fsnode,on chain] (f3) [label=left: 20.43] {};
+\node[fsnode,on chain] (f4) [label=left: 2.34] {};
+\node[fsnode,on chain] (f5) [label=left: 96.78] {};
+\end{scope}
+% the vertices of C
+\begin{scope}[xshift=5cm,yshift=-0.1cm,start chain=going below,node distance=7mm]
+\node[ssnode,on chain] (s6) [label=right: \$20.43] {};
+\node[ssnode,on chain] (s7) [label=right: \$2.34] {};
+\node[ssnode,on chain] (s8) [label=right: \$52.53] {};
+\node[ssnode,on chain] (s9) [label=right: \$53.40] {};
+\node[ssnode,on chain] (s10) [label=right: \$67.63] {};
+\node[ssnode,on chain] (s11) [label=right: \$96.78] {};
+\end{scope}
+% the set U
+\node [mywhite,fit=(f0) (f1) (f2) (f3) (f4) (f5) ] {};
+% the set C
+\node [mywhite,fit=(s6) (s7) (s8) (s9) (s10) (s11) ] {};% the edges
+\draw[dotted] (f0) -- (s7);
+\draw (f0) -- (s10);
+\draw[dotted] (f1) -- (s8);
+\draw[dotted] (f1) -- (s9);
+\draw[dotted] (f1) -- (s10);
+\draw (f1) -- (s11);
+\draw (f2) -- (s7);
+\draw[dotted] (f2) -- (s8);
+\draw[dotted] (f2) -- (s10);
+\draw (f3) -- (s6);
+\draw[dotted] (f3) -- (s7);
+\draw[dotted] (f3) -- (s8);
+\draw[dotted] (f3) -- (s10);
+\draw (f4) -- (s8);
+\draw[dotted] (f4) -- (s10);
+\end{tikzpicture} $$$$ \begin{tikzpicture}[thick, every node/.style={draw,circle}, fsnode/.style={fill=myblue}, ssnode/.style={fill=mygreen}, every fit/.style={ellipse,draw,inner sep=10pt,text width=2cm},-,shorten >= 3pt,shorten <= 3pt]
+% the vertices of U
+\begin{scope}[start chain=going below,node distance=7mm]
+\node[fsnode,on chain] (f0) [label=left: 28.13] {};
+\node[fsnode,on chain] (f1) [label=left: 28.13] {};
+\node[fsnode,on chain] (f2) [label=left: 28.13] {};
+\node[fsnode,on chain] (f3) [label=left: 28.13] {};
+\node[fsnode,on chain] (f4) [label=left: 86.78] {};
+\node[fsnode,on chain] (f5) [label=left: 28.13] {};
+\end{scope}
+% the vertices of C
+\begin{scope}[xshift=5cm,yshift=-0.1cm,start chain=going below,node distance=7mm]
+\node[ssnode,on chain] (s6) [label=right: \$30.18] {};
+\node[ssnode,on chain] (s7) [label=right: \$66.71] {};
+\node[ssnode,on chain] (s8) [label=right: \$5.74] {};
+\node[ssnode,on chain] (s9) [label=right: \$28.13] {};
+\node[ssnode,on chain] (s10) [label=right: \$86.78] {};
+\node[ssnode,on chain] (s11) [label=right: \$45.84] {};
+\end{scope}
+% the set U
+\node [mywhite,fit=(f0) (f1) (f2) (f3) (f4) (f5) ] {};
+% the set C
+\node [mywhite,fit=(s6) (s7) (s8) (s9) (s10) (s11) ] {};% the edges
+\draw[dotted] (f0) -- (s6);
+\draw[dotted] (f0) -- (s7);
+\draw (f0) -- (s10);
+\draw[dotted] (f0) -- (s11);
+\draw (f1) -- (s9);
+\draw[dotted] (f1) -- (s11);
+\draw[dotted] (f2) -- (s6);
+\draw[dotted] (f2) -- (s9);
+\draw[dotted] (f2) -- (s10);
+\draw (f2) -- (s11);
+\draw (f3) -- (s7);
+\draw[dotted] (f3) -- (s9);
+\draw[dotted] (f3) -- (s10);
+\draw[dotted] (f3) -- (s11);
+\draw[dotted] (f4) -- (s6);
+\draw[dotted] (f4) -- (s9);
+\draw[dotted] (f4) -- (s10);
+\draw (f5) -- (s6);
+\draw[dotted] (f5) -- (s7);
+\draw[dotted] (f5) -- (s9);
+\draw[dotted] (f5) -- (s10);
+\draw[dotted] (f5) -- (s11);
+\end{tikzpicture} $$
+\end{document}
