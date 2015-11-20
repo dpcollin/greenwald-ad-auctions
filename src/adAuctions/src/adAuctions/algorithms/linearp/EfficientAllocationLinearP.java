@@ -8,7 +8,7 @@ import ilog.cplex.IloCplex;
 
 
 
-public class efficient_linear {
+public class EfficientAllocationLinearP {
 
 	/*
 	 * The market for which we are going to build the linear
@@ -22,7 +22,7 @@ public class efficient_linear {
 	/*
 	 * Constructor receives a game G.
 	 */
-	public efficient_linear(Market G){
+	public EfficientAllocationLinearP(Market G){
 		this.market = G;
 	}
 
@@ -78,12 +78,12 @@ public class efficient_linear {
 				out[i] = this.cplex.getValues(u[i]);
 			}
 			
-			for (int i=0; i<this.market.getNumberCampaigns(); i++){
-				for (int j=0; j<this.market.getNumberUsers(); j++){
-					//System.out.print(out[i][j]);
-					//System.out.print(" ");
+			for (int i=0; i<this.market.getNumberUsers(); i++){
+				for (int j=0; j<this.market.getNumberCampaigns(); j++){
+					System.out.print(out[j][i]);
+					System.out.print(" ");
 				}
-				//System.out.print("\n");
+				System.out.print("\n");
 			}
 			System.out.print(this.cplex.getObjValue());
 			
