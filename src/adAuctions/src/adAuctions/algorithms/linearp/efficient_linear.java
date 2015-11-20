@@ -1,12 +1,12 @@
 package adAuctions.algorithms.linearp;
 
+import adAuctions.structures.Market;
 import ilog.concert.IloException;
 import ilog.concert.IloLinearNumExpr;
 import ilog.concert.IloNumVar;
 import ilog.cplex.IloCplex;
 
 
-import adAuctions.structures.Market;
 
 public class efficient_linear {
 

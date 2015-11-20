@@ -34,7 +34,7 @@ public class EnvyFreePricesLinearP {
 	/*
 	 * Objects needed to interface with CPlex Library.
 	 */
-	protected IloNumVar[] x;
+	protected IloNumVar[] prices;
 	protected IloCplex cplex;
  	protected IloNumVar[][] var;
 	
@@ -69,8 +69,8 @@ public class EnvyFreePricesLinearP {
 								System.out.println("\t-- Price("+i+") less than Price("+k+")");
 							}
 							this.linearConstrains.add(this.cplex.addLe(
-				    	    							this.cplex.sum(	this.cplex.prod(-1.0, this.x[k]),
-				    	    											this.cplex.prod( 1.0, this.x[i])), 0.0));
+				    	    							this.cplex.sum(	this.cplex.prod(-1.0, this.prices[k]),
+				    	    											this.cplex.prod( 1.0, this.prices[i])), 0.0));
 						}
 					}
 				}
@@ -92,7 +92,7 @@ public class EnvyFreePricesLinearP {
 				for(int k=0;k<this.market.getNumberUsers();k++){
 					if(this.market.allocationMatrixEntry(k, j) > 0){
 						if(this.verbose) System.out.println("\t-- For condition A Price("+k +")<=: "+this.market.getCampaign(j).getReward());
-						this.linearConstrains.add(cplex.addLe(cplex.prod(1.0, this.x[k]), this.market.getCampaign(j).getReward()));
+						this.linearConstrains.add(cplex.addLe(cplex.prod(1.0, this.prices[k]), this.market.getCampaign(j).getReward()));
 					}
 				}
 			}
@@ -113,7 +113,7 @@ public class EnvyFreePricesLinearP {
 				for(int k=0;k<this.market.getNumberUsers();k++){
 					if(this.market.isConnected(k, j) && this.market.allocationMatrixEntry(k, j) == 0){
 						if(this.verbose) System.out.println("\t\t-- For condition B user "+k + " should be greater than or equal reward: "+this.market.getCampaign(j).getReward());
-						this.linearConstrains.add(cplex.addGe(cplex.prod(1.0, this.x[k]), this.market.getCampaign(j).getReward()));
+						this.linearConstrains.add(cplex.addGe(cplex.prod(1.0, this.prices[k]), this.market.getCampaign(j).getReward()));
 					}
 				}
 			}
@@ -129,7 +129,7 @@ public class EnvyFreePricesLinearP {
 		for(int i=0;i<this.market.getNumberUsers();i++){
 			if(this.market.isUserAllocationZero(i)){
 				if(this.verbose) System.out.println("\n Condition C applies to user "+i);
-				this.linearConstrains.add(cplex.addEq(cplex.prod(1.0,this.x[i]), this.market.getHighestReward()));
+				this.linearConstrains.add(cplex.addEq(cplex.prod(1.0,this.prices[i]), this.market.getHighestReward()));
 			}
 		}
 		
@@ -151,9 +151,9 @@ public class EnvyFreePricesLinearP {
 	 		ub[i] = Double.MAX_VALUE;
 	 		objvals[i] = 1.0;
 	 	}
-	 	this.x  = this.cplex.numVarArray(this.market.getNumberUsers(), lb, ub);
-	    this.var[0] = this.x;
-	    this.cplex.addMaximize(this.cplex.scalProd(this.x, objvals));
+	 	this.prices  = this.cplex.numVarArray(this.market.getNumberUsers(), lb, ub);
+	    this.var[0] = this.prices;
+	    this.cplex.addMaximize(this.cplex.scalProd(this.prices, objvals));
 		
 	}	
 	/*

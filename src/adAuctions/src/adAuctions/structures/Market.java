@@ -275,11 +275,20 @@ public class Market {
     	}
     }
     
+    protected String printCampaignsRewards(){
+    	String ret = "";
+    	for(int j=0;j<this.getNumberCampaigns();j++){
+    		ret += "\nR("+j+") = "+ this.campaigns[j].totalValue;
+    	}
+    	return ret;
+    }
+    
     @Override
     public String toString(){
     	
-    	return "NbrCampaigns:\t"+this.getNumberCampaigns() + "\n" +
+    	return  "NbrCampaigns:\t"+this.getNumberCampaigns() + "\n" +
     			"NbrUsers:\t"+this.getNumberUsers() + "\n" +
+    			"Campaigns Rewards" + this.printCampaignsRewards() + "\n" +
     			"Connections Matrix:\t"+this.printConnectionsMatrix() + "\n" +
     			"Allocation Matrix:\t" + this.printAllocationMatrix();
     }

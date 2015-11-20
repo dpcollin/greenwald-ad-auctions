@@ -34,10 +34,7 @@ public class EnvyFreePricesLinearPAlpha extends EnvyFreePricesLinearP{
 	/*
 	 * Objects needed to interface with CPlex Library.
 	 */
-	//protected IloNumVar[] x;
 	protected IloNumVar[] alphas;
-	//protected IloCplex cplex;
- 	//protected IloNumVar[][] var;
 	
 	/*
 	 * Constructor receives a market G.
@@ -70,8 +67,8 @@ public class EnvyFreePricesLinearPAlpha extends EnvyFreePricesLinearP{
 							this.linearConstrains.add(this.cplex.addLe(
 				    	    							this.cplex.sum(	
 				    	    											this.cplex.sum(	this.cplex.prod(-1.0,	this.alphas[k]),
-				    	    															this.cplex.prod(-1.0, 	this.x[k])),
-				    	    											this.cplex.prod( 1.0, this.x[i])), 0.0));
+				    	    															this.cplex.prod(-1.0, 	this.prices[k])),
+				    	    											this.cplex.prod( 1.0, this.prices[i])), 0.0));
 						}
 					}
 				}
@@ -89,12 +86,16 @@ public class EnvyFreePricesLinearPAlpha extends EnvyFreePricesLinearP{
 	 	
 	 	for(int i=0;i<this.market.getNumberUsers();i++){
 	 		lb[i] = 0.0;
-	 		ub[i] = 1.0;
+	 		ub[i] = Double.MAX_VALUE;
 	 		objvals[i] = 1.0;
 	 	}
 	 	System.out.println("generateAlphaObjective " + this.market.getNumberUsers());
 	 	this.alphas  = this.cplex.numVarArray(this.market.getNumberUsers(), lb, ub);
 	    this.var[0] = this.alphas;
+
+	    this.prices  = this.cplex.numVarArray(this.market.getNumberUsers(), lb, ub);
+	    this.var[1] = this.prices;
+	    
 	    //this.cplex.addMaximize(this.cplex.scalProd(this.alphas, objvals));
 	    this.cplex.addMinimize(this.cplex.scalProd(this.alphas, objvals));
 		
@@ -110,9 +111,9 @@ public class EnvyFreePricesLinearPAlpha extends EnvyFreePricesLinearP{
 			this.cplex = new IloCplex();
 			if(!this.verbose) cplex.setOut(null);
 		 	IloRange[][]  rng = new IloRange[1][];
-		 	this.var = new IloNumVar[1][];
+		 	this.var = new IloNumVar[2][];
 		 	
-		 	this.generatePriceObjective();
+		 	//this.generatePriceObjective();
 		 	this.generateAlphaObjective();
 		 	this.generateCompactConditions();
 			this.generateConditionA();
@@ -129,13 +130,12 @@ public class EnvyFreePricesLinearPAlpha extends EnvyFreePricesLinearP{
     		 	for(int i=0;i<this.market.getNumberUsers();i++){
             	    envyFreePrices[i]= -1.0;
     		 	}        	  
-    	    	double[] y     = cplex.getValues(this.alphas);
-    		 	System.out.println("y " + y.length);
-    	        double[] dj    = cplex.getReducedCosts(var[0]);
+    	    	double[] LP_Prices     = cplex.getValues(this.prices);
+    	    	double[] Alphas     = cplex.getValues(this.alphas);
+    	        /*double[] dj    = cplex.getReducedCosts(this.var[0]);
     	        double[] pi    = cplex.getDuals(rng[0]);
-    	        double[] slack = cplex.getSlacks(rng[0]);
+    	        double[] slack = cplex.getSlacks(rng[0]);*/
 
-    	    	System.out.println("y.length = "+ y.length);
     	    	
     	    	if(this.verbose){
     	    		System.out.println("Solution status = " + cplex.getStatus());
@@ -144,16 +144,20 @@ public class EnvyFreePricesLinearPAlpha extends EnvyFreePricesLinearP{
     	        int ncols = cplex.getNcols();
     	        System.out.println("ncols = "+ncols);
     	        if(this.verbose) System.out.println("Optimal Prices");
-    	        for (int j = 0; j < this.market.getNumberUsers(); ++j) {
+    	        for (int j = 0; j < this.market.getNumberUsers(); j++) {
     	        	//System.out.println("Column: " + j +" Value = "+ y[j] +" Reduced cost = "+dj[j]);
-    	        	if(this.verbose) System.out.println("P("+j+") = " + y[j]);
+    	        	if(this.verbose){
+    	        		System.out.println("P("+j+") = " + LP_Prices[j]);
+    	        	}
     	        	//envyFreePrices[j] = y[j];
     	        }
+    	        for(int j = 0; j<this.market.getNumberUsers(); j++){
+    	        	if(this.verbose){
+    	        		System.out.println("Alpha("+j+") = " + Alphas[j]);    	        		
+    	        	}
+    	        } 
 
-    	        int nrows = cplex.getNrows();
-    	        for (int i = 0; i < nrows; ++i) {
-    	        System.out.println("Row   : " + i + " Slack = " + slack[i] + " Pi = " + pi[i]);
-    	        }
+
     	        System.exit(0);
     	        return envyFreePrices;
     	    }

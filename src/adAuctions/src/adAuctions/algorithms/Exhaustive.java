@@ -1,9 +1,9 @@
 package adAuctions.algorithms;
 
-import adAuctions.structures.*;
-
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import adAuctions.structures.*;
 
 /**
  * Created by Daniel on 10/7/15.

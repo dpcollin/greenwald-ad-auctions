@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import adAuctions.algorithms.Exhaustive;
+import adAuctions.algorithms.linearp.EnvyFreePricesLinearP;
+import adAuctions.algorithms.linearp.EnvyFreePricesLinearPAlpha;
 import adAuctions.algorithms.linearp.LinearP;
 import adAuctions.structures.Allocation;
 import adAuctions.structures.Market;
@@ -67,7 +69,12 @@ public class MarketFactory {
 					//Set the allocation for this market
 					market.setAllocationMatrix(allocmatrix);
 					if(MarketFactory.verbose) System.out.println("\n ----- Market generated automatically ---- \n" + market);
-					double[] envyFreePrices = new LinearP(market).Solve();
+					double[] envyFreePrices = new EnvyFreePricesLinearP(market).Solve();
+					if(envyFreePrices == null){
+						System.out.println("There are NO envy-free prices for this market:" + market);
+						return false;
+					}
+					envyFreePrices = new EnvyFreePricesLinearPAlpha(market).Solve();
 					if(envyFreePrices == null){
 						System.out.println("There are NO envy-free prices for this market:" + market);
 						return false;

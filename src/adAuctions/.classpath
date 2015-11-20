@@ -2,5 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/gpfs/main/sys/shared/psfu/local/projects/cplex/cplex/cplex123/x86_64/lib/cplex.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

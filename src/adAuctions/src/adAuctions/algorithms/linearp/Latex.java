@@ -10,8 +10,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import adAuctions.structures.Market;
 import adAuctions.algorithms.linearp.test.MarketFactory;
+import adAuctions.structures.Market;
 
 public class Latex {
 	/*
