@@ -163,7 +163,7 @@ public class MarketFactory {
 				/*
 				 * How many times to repeat each experiment
 				 */
-				double connectivity = 1.0;
+				double connectivity = 0.1;
 				for(int k=0;k<repeatExperiments;k++){
 					/*
 					 * For each connectivity level perform numExperiments number of experiments

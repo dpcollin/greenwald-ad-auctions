@@ -91,15 +91,15 @@ public class EfficientAllocationLinearP {
 			this.cplex.solve();
 			if ( cplex.populate() ) {
 				int numsol = cplex.getSolnPoolNsolns();
-	            int numsolreplaced = cplex.getSolnPoolNreplaced();
+				int numsolreplaced = cplex.getSolnPoolNreplaced();
 				/*
 				 * Print some information
 				 */
 				if(this.verbose){
 					System.out.println("***********************************Populate");
-		            System.out.println("The solution pool contains " + numsol + " solutions.");
-		            System.out.println(numsolreplaced + " solutions were removed due to the " + "solution pool relative gap parameter.");
-		            System.out.println("In total, " + (numsol + numsolreplaced) + " solutions were generated.");
+					System.out.println("The solution pool contains " + numsol + " solutions.");
+					System.out.println(numsolreplaced + " solutions were removed due to the " + "solution pool relative gap parameter.");
+					System.out.println("In total, " + (numsol + numsolreplaced) + " solutions were generated.");
 				}
 	            /*
 	             * Store all the solutions in an ArrayList.
