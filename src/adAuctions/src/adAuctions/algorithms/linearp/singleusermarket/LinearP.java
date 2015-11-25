@@ -1,4 +1,4 @@
-package adAuctions.algorithms.linearp;
+package adAuctions.algorithms.linearp.singleusermarket;
 
 import ilog.concert.IloException;
 import ilog.concert.IloNumVar;
@@ -37,7 +37,7 @@ public class LinearP {
 	protected IloNumVar[] x;
 	protected IloCplex cplex;
 	/*
-	 * Constructor receives a game G.
+	 * Constructor receives a market G.
 	 */
 	public LinearP(Market G){
 		this.market = G;

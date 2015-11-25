@@ -1,4 +1,4 @@
-package adAuctions.algorithms.linearp;
+package adAuctions.graphs;
 
 import java.io.IOException;
 import java.io.PrintWriter;

@@ -11,9 +11,9 @@ import java.util.ArrayList;
  */
 
 public class Campaign {
-    public int numImpressions;
-    public double valuePerImpression;
-    public double totalValue;
+    protected int numImpressions;
+    protected double valuePerImpression;
+    protected double totalValue;
     public ArrayList<Integer> connections;
 
     public Campaign(int numImpressions, double valuePerImpression){
@@ -41,7 +41,16 @@ public class Campaign {
         this.totalValue -= (impressionsLost * valuePerImpression);
         this.valuePerImpression = this.totalValue/this.numImpressions;
     }
+    /*
+     * Getters
+     */
     public double getReward(){
     	return this.totalValue;
-    }    
+    }
+    public double getValuePerImpression(){
+    	return this.valuePerImpression;
+    }
+    public int getNumImpressions(){
+    	return this.numImpressions;
+    }
 }

@@ -1,9 +1,11 @@
 package adAuctions.structures;
 import java.util.ArrayList;
+import java.util.PriorityQueue;
 import java.util.Random;
 
 import adAuctions.structures.Campaign;
 import adAuctions.structures.UserSet;
+import adAuctions.structures.util.UserSetPriceComparator;
 
 /**
  * Created by Daniel on 9/25/15.
@@ -168,15 +170,18 @@ public class Market {
      * Setters
      */
     public void setConnectionsMatrix(){
+    	/*
+    	 * Take an array of connections and turn it into a matrix of booleans
+    	 */
 		this.connectionsMatrix = new boolean[this.userSets.length][this.campaigns.length];
-		for(int k=0;k<this.connections.length;k++){
-			for(int i=0;i<this.campaigns.length;i++){
-				for(int j=0;j<this.userSets.length;j++){
-					if(this.connections[k]!= null && this.connections[k].campaignIndex == i && this.connections[k].userIndex == j){
-						this.connectionsMatrix[j][i] = true;
-					}
-				}
+		for(int i=0;i<this.userSets.length;i++){
+			for(int j=0;j<this.campaigns.length;j++){
+				this.connectionsMatrix[i][j] = false; //Initialize all connections to false
 			}
+		}
+		for(int k=0;k<this.connections.length;k++){
+			//Set only those connections that are actually in the connection objects
+			this.connectionsMatrix[this.connections[k].userIndex][this.connections[k].campaignIndex] = true;
     	}
     }
     public void setAllocationMatrix(int[][] allocationMatrix){
@@ -236,6 +241,98 @@ public class Market {
     	return true;
     }
     /*
+     * Get current bundle cost for a campaign
+     */
+    public double getBundleCost(int j){
+    	double cost = 0.0;
+    	for(int i=0;i<this.getNumberUsers();i++){
+    		if(this.allocationMatrix[i][j]>0){
+    			cost += this.allocationMatrix[i][j]*this.userSets[i].getPrice();
+    		}
+    	}
+    	return cost;
+    }
+    /*
+     * Get current bundle number for a campaign
+     */
+    public double getBundleNumber(int j){
+    	double cost = 0.0;
+    	for(int i=0;i<this.getNumberUsers();i++){
+    		if(this.allocationMatrix[i][j]>0){
+    			cost += this.allocationMatrix[i][j];
+    		}
+    	}
+    	return cost;
+    }    
+    /*
+     * Heuristic to check envy-free-ness for a campaign. 
+     */
+    public boolean isCampaignEnvyFree(PriorityQueue<UserSet> queue, int campaignIndex){
+    	System.out.println("Heuristic for campaign:" + campaignIndex + ", check this many users:" + queue.size());
+    	double cost = 0.0;
+    	int impressionsNeeded = this.campaigns[campaignIndex].numImpressions;
+    	while (impressionsNeeded > 0 && queue.size() != 0){
+			UserSet u = queue.remove();
+			if(this.isConnected(u.getIndex(), campaignIndex)){
+				System.out.println(u);
+				if(u.getNumUsers()>= impressionsNeeded){
+					cost += impressionsNeeded*u.getPrice();
+					impressionsNeeded = 0;
+				}else{
+					cost += u.getPrice() * u.getNumUsers();
+					impressionsNeeded -= u.getNumUsers();
+				}
+			}
+		}
+    	System.out.println("impressionsNeeded = "+impressionsNeeded);
+    	System.out.println("cost of cheapest bundle = "+cost);
+    	System.out.println("cost of current  bundle = "+getBundleCost(campaignIndex));
+    	System.out.println("nbr  of current  bundle = "+getBundleNumber(campaignIndex));
+    	System.out.println("reward of this campaign = "+this.campaigns[campaignIndex].getReward());
+    	//if(impressionsNeeded > 0 || getBundleCost(campaignIndex) <= cost){
+    	if(impressionsNeeded > 0){ //If you cannot be satisfied, you are inmediately envy-free
+    		System.out.println("true");
+    		return true;
+    	}else{
+    		if(getBundleNumber(campaignIndex) >= this.campaigns[campaignIndex].getNumImpressions()){//This campaign was satisfied
+    			if(cost < getBundleCost(campaignIndex)){
+    				return false;
+    			}
+    			return true;
+    		}else{//the campaign was not satisfied
+    			if(cost < this.campaigns[campaignIndex].getReward()){
+    				return false;
+    			}
+    			return true;
+    		}
+    	}
+    }
+    /*
+     * Check if this whole market is envy-free
+     */
+    public boolean areAllCampaignsEnvyFree(double[] prices){
+		System.out.println("Check Heuristic For Envy-free-ness");
+    	/*
+    	 * Construct a priority queue with users where the priority is price in ascending order.
+    	 */
+    	int numUsers = this.getNumberUsers();
+    	PriorityQueue<UserSet> queue = new PriorityQueue<UserSet>(numUsers, new UserSetPriceComparator());
+		for(int i=0;i<numUsers;i++){
+			 this.userSets[i].setPrice(prices[i]);
+			 this.userSets[i].setIndex(i);
+			 queue.add(this.userSets[i]);
+		}
+    	/*
+    	 * Check that each campaign is envy-free for the previously constructed queue.
+    	 */
+    	for(int j=0;j<this.campaigns.length;j++){
+    		if(!this.isCampaignEnvyFree(new PriorityQueue<UserSet>(queue), j)){//Pass a copy of the queue each time...
+    			return false;
+    		}
+    	}
+    	return true;
+    }
+    /*
      * Just a helper function to print the allocation
      */
     
@@ -272,6 +369,12 @@ public class Market {
     		return ret+"\n";
     	}else{
     		return "There is no allocation for this market";
+    	}
+    }
+    
+    public static void printPrices(double[] prices){
+    	for(int i=0;i<prices.length;i++){
+    		System.out.println("P("+i+") = " + prices[i]);
     	}
     }
     

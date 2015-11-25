@@ -31,7 +31,7 @@ public class EfficientAllocationLinearP {
 		this.market = G;
 	}
 
-	public ArrayList<double[][]> Solve(){
+	public ArrayList<int[][]> Solve(){
 		try {
 			this.cplex = new IloCplex();
 			if(!this.verbose) cplex.setOut(null);
@@ -55,7 +55,7 @@ public class EfficientAllocationLinearP {
 			 */
 			IloLinearNumExpr obj = this.cplex.linearNumExpr();
 			for (int i=0; i<this.market.getNumberCampaigns(); i++){
-				obj.addTerm(this.market.campaigns[i].totalValue, y[i]);
+				obj.addTerm(this.market.campaigns[i].getReward(), y[i]);
 			}
 			this.cplex.addMaximize(obj);
 			
@@ -63,7 +63,7 @@ public class EfficientAllocationLinearP {
 			 * Constraints.
 			 */
 			for (int i=0; i<this.market.getNumberCampaigns(); i++){
-				double coeff = 1.0/(double)this.market.campaigns[i].numImpressions;
+				double coeff = 1.0/(double)this.market.campaigns[i].getNumImpressions();
 				IloLinearNumExpr expr = cplex.linearNumExpr();
 				for (int j=0; j<this.market.getNumberUsers(); j++){
 					if(this.market.isConnected(j, i)){
@@ -83,7 +83,7 @@ public class EfficientAllocationLinearP {
 				for (int i=0; i<this.market.getNumberCampaigns(); i++){
 					expr.addTerm(1.0,u[i][j]);
 				}
-				this.cplex.addLe(expr,this.market.userSets[j].numUsers);
+				this.cplex.addLe(expr,this.market.userSets[j].getNumUsers());
 			}
 			/*
 			 * Solve the problem and get many solutions:
@@ -104,13 +104,24 @@ public class EfficientAllocationLinearP {
 	            /*
 	             * Store all the solutions in an ArrayList.
 	             */
-	            ArrayList<double[][]> Solutions = new ArrayList<>();
+	            ArrayList<int[][]> Solutions = new ArrayList<>();
 	            for (int l = 0; l < numsol; l++) {
-	    			double[][] sol = new double[this.market.getNumberCampaigns()][this.market.getNumberUsers()];
+	            	/*
+	            	 * The solution should be a matrix of integers. However, CPLEX returns a matrix of doubles.
+	            	 * So we are going to have to cast this into integers.
+	            	 */
+	    			int[][] sol = new int[this.market.getNumberCampaigns()][this.market.getNumberUsers()];
+	    			double[][] solDouble = new double[this.market.getNumberCampaigns()][this.market.getNumberUsers()];
 	    			for (int i=0; i<this.market.getNumberCampaigns(); i++){
-	    				sol[i] = this.cplex.getValues(u[i],l);
+	    				solDouble[i] = this.cplex.getValues(u[i],l);
+	    				/*
+	    				 * Unfortunately in Java the only way to cast your array is to iterate through each element and cast them one by one
+	    				 */
+	    				for(int j=0;j<this.market.getNumberUsers(); j++){
+	    					sol[i][j] = (int) solDouble[i][j];
+	    				}
 	    			}
-	    			Solutions.add(sol);
+	    			Solutions.add(transposeMatrix(sol));
 	            }
 	            this.cplex.end();
 	            return Solutions;
@@ -123,4 +134,11 @@ public class EfficientAllocationLinearP {
 		}
 		return null;//if we reach this point, then there were no envy-free prices
 	}
+	  public static int[][] transposeMatrix(int [][] m){
+	        int[][] temp = new int[m[0].length][m.length];
+	        for (int i = 0; i < m.length; i++)
+	            for (int j = 0; j < m[0].length; j++)
+	                temp[j][i] = m[i][j];
+	        return temp;
+	    }
 }

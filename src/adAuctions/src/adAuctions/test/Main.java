@@ -51,8 +51,8 @@ public class Main {
             for (int j = 0; j < allocations[0].length; j++) {
                 userCount+=allocations[i][j].num_customers;
             }
-            if(userCount==game.campaigns[i].numImpressions){
-                value+=game.campaigns[i].totalValue;
+            if(userCount==game.campaigns[i].getNumImpressions()){
+                value+=game.campaigns[i].getReward();
             }
         }
         return value;

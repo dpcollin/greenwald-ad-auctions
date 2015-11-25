@@ -10,11 +10,12 @@ import java.util.ArrayList;
  * Represents a set of users with a single price
  */
 public class UserSet {
-    public int numUsers;
-    public ArrayList<Integer> connections;
+	protected int i; //Index of this user set in a market
+    protected int numUsers;
+    protected ArrayList<Integer> connections;
     //price is uninitialized, exists for later use if necessary
-    public double price;
-    public double reserve;
+    protected double price;
+    protected double reserve;
 
     /*
      * Constructor. Receives only the number of users.
@@ -45,9 +46,43 @@ public class UserSet {
         this.reserve = userSet.reserve;
     }
     /*
+     * Some useful functions
+     */
+    public void subtractFromNumUser(int amountToSubtract){
+    	this.numUsers -= amountToSubtract;
+    }
+    /*
      * Getters
      */
     public int getNumUsers(){
     	return this.numUsers;
-    }    
+    }
+    public double getPrice(){
+    	return this.price;
+    }
+    public int getIndex(){
+    	return this.i;
+    }
+    public double getReserve(){
+    	return this.reserve;
+    }
+    public ArrayList<Integer> getConnections(){
+    	return this.connections;
+    }
+    /*
+     * Setters
+     */
+    public void setPrice(double price){
+    	this.price = price;
+    }
+    public void setIndex(int i){
+    	this.i = i;
+    }
+    public void setNumUsers(int numUsers){
+    	this.numUsers = numUsers;
+    }
+    @Override
+    public String toString(){
+		return  "(i = " + this.i + ", numUsers = "+ this.numUsers + ", pricePerUser = " + this.price +")";
+    }
 }

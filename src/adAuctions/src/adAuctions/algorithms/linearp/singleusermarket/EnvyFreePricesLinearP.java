@@ -1,4 +1,4 @@
-package adAuctions.algorithms.linearp;
+package adAuctions.algorithms.linearp.singleusermarket;
 
 import ilog.concert.IloException;
 import ilog.concert.IloNumVar;
@@ -17,7 +17,7 @@ import adAuctions.structures.Market;
  *  
  * @author Enrique Areyan
  */
-public class EnvyFreePricesLinearPAlpha extends EnvyFreePricesLinearP{
+public class EnvyFreePricesLinearP {
 	/*
 	 * Boolean to control whether or not to output.
 	 */
@@ -30,18 +30,22 @@ public class EnvyFreePricesLinearPAlpha extends EnvyFreePricesLinearP{
 	/*
 	 * Contains all the linear constrains
 	 */
-	//private ArrayList<IloRange> linearConstrains;
+	protected ArrayList<IloRange> linearConstrains;
 	/*
 	 * Objects needed to interface with CPlex Library.
 	 */
-	protected IloNumVar[] alphas;
+	protected IloNumVar[] prices;
+	protected IloCplex cplex;
+ 	protected IloNumVar[][] var;
 	
 	/*
-	 * Constructor receives a market G.
+	 * Constructor receives a game G.
 	 */
-	public EnvyFreePricesLinearPAlpha(Market G){
-		super(G);
+	public EnvyFreePricesLinearP(Market G){
 		this.market = G;
+	}
+	public EnvyFreePricesLinearP(){
+		
 	}
 	/*
 	 * This method generate the compact conditions.
@@ -65,9 +69,7 @@ public class EnvyFreePricesLinearPAlpha extends EnvyFreePricesLinearP{
 								System.out.println("\t-- Price("+i+") less than Price("+k+")");
 							}
 							this.linearConstrains.add(this.cplex.addLe(
-				    	    							this.cplex.sum(	
-				    	    											this.cplex.sum(	this.cplex.prod(-1.0,	this.alphas[k]),
-				    	    															this.cplex.prod(-1.0, 	this.prices[k])),
+				    	    							this.cplex.sum(	this.cplex.prod(-1.0, this.prices[k]),
 				    	    											this.cplex.prod( 1.0, this.prices[i])), 0.0));
 						}
 					}
@@ -75,11 +77,71 @@ public class EnvyFreePricesLinearPAlpha extends EnvyFreePricesLinearP{
 			}
 		}	
 	}
-	
-	
 	/*
+	 * This method generates conditions A.
 	 */
-	protected void generateAlphaObjective() throws IloException{
+	protected void generateConditionA() throws IloException{
+		
+		for(int j=0;j<this.market.getNumberCampaigns();j++){
+			if(!this.market.isCampaignBundleZero(j)){
+				if(this.verbose) System.out.println("\nCondition A applies to campaign "+j);
+				/*
+				 * WARNING: the following loop will work only because we know that
+				 * any campaign gets allocated at most one user
+				 */
+				for(int k=0;k<this.market.getNumberUsers();k++){
+					if(this.market.allocationMatrixEntry(k, j) > 0){
+						if(this.verbose) System.out.println("\t-- For condition A Price("+k +")<=: "+this.market.getCampaign(j).getReward());
+						this.linearConstrains.add(cplex.addLe(cplex.prod(1.0, this.prices[k]), this.market.getCampaign(j).getReward()));
+					}
+				}
+			}
+		}
+		
+	}
+	/*
+	 * This method generates conditions B.
+	 */
+	protected void generateConditionB() throws IloException{
+		for(int j=0;j<this.market.getNumberCampaigns();j++){
+			if(this.market.isCampaignBundleZero(j)){
+				if(this.verbose) System.out.println("\nCondition B applies to campaign "+j);
+				/*
+				 * WARNING: the following loop will work only because we know that
+				 * any campaign gets allocated at most one user
+				 */
+				for(int k=0;k<this.market.getNumberUsers();k++){
+					if(this.market.isConnected(k, j) && this.market.allocationMatrixEntry(k, j) == 0){
+						if(this.verbose) System.out.println("\t\t-- For condition B user "+k + " should be greater than or equal reward: "+this.market.getCampaign(j).getReward());
+						this.linearConstrains.add(cplex.addGe(cplex.prod(1.0, this.prices[k]), this.market.getCampaign(j).getReward()));
+					}
+				}
+			}
+		}		
+	}
+	/*
+	 * This method generates conditions C.
+	 * This condition is a way of not letting price of users that
+	 * have no allocation go unbounded. As of now we set the price of an
+	 * unallocated user to be equal to the highest priced campaign
+	 */
+	protected void generateConditionC() throws IloException{
+		for(int i=0;i<this.market.getNumberUsers();i++){
+			if(this.market.isUserAllocationZero(i)){
+				if(this.verbose) System.out.println("\n Condition C applies to user "+i);
+				this.linearConstrains.add(cplex.addEq(cplex.prod(1.0,this.prices[i]), this.market.getHighestReward()));
+			}
+		}
+		
+	}
+	/*
+	 * This method generates the objective function max P1+P2+...+Pn
+	 * First set upper and lower bound according to 
+	 * how many prices we want to solve for, i.e.,
+	 * how many users. Also set the objective function
+	 * to P1+P2+...+Pn
+	 */
+	protected void generatePriceObjective() throws IloException{
 	 	double[] lb = new double[this.market.getNumberUsers()];
 	 	double[] ub = new double[this.market.getNumberUsers()];
 	    double[] objvals = new double[this.market.getNumberUsers()];
@@ -89,17 +151,11 @@ public class EnvyFreePricesLinearPAlpha extends EnvyFreePricesLinearP{
 	 		ub[i] = Double.MAX_VALUE;
 	 		objvals[i] = 1.0;
 	 	}
-	 	System.out.println("generateAlphaObjective " + this.market.getNumberUsers());
-	 	this.alphas  = this.cplex.numVarArray(this.market.getNumberUsers(), lb, ub);
-	    this.var[0] = this.alphas;
-
-	    this.prices  = this.cplex.numVarArray(this.market.getNumberUsers(), lb, ub);
-	    this.var[1] = this.prices;
-	    
-	    //this.cplex.addMaximize(this.cplex.scalProd(this.alphas, objvals));
-	    this.cplex.addMinimize(this.cplex.scalProd(this.alphas, objvals));
+	 	this.prices  = this.cplex.numVarArray(this.market.getNumberUsers(), lb, ub);
+	    this.var[0] = this.prices;
+	    this.cplex.addMaximize(this.cplex.scalProd(this.prices, objvals));
 		
-	}
+	}	
 	/*
 	 * This is the most important method of this class. 
 	 * It build the linear programming and solves it.
@@ -111,10 +167,9 @@ public class EnvyFreePricesLinearPAlpha extends EnvyFreePricesLinearP{
 			this.cplex = new IloCplex();
 			if(!this.verbose) cplex.setOut(null);
 		 	IloRange[][]  rng = new IloRange[1][];
-		 	this.var = new IloNumVar[2][];
+		 	this.var = new IloNumVar[1][];
 		 	
-		 	//this.generatePriceObjective();
-		 	this.generateAlphaObjective();
+		 	this.generatePriceObjective();
 		 	this.generateCompactConditions();
 			this.generateConditionA();
 			this.generateConditionB();
@@ -129,36 +184,28 @@ public class EnvyFreePricesLinearPAlpha extends EnvyFreePricesLinearP{
         	    double[] envyFreePrices = new double[this.market.getNumberUsers()];
     		 	for(int i=0;i<this.market.getNumberUsers();i++){
             	    envyFreePrices[i]= -1.0;
-    		 	}        	  
-    	    	double[] LP_Prices     = cplex.getValues(this.prices);
-    	    	double[] Alphas     = cplex.getValues(this.alphas);
-    	        /*double[] dj    = cplex.getReducedCosts(this.var[0]);
+    		 	}        	    
+    	    	double[] y     = cplex.getValues(this.var[0]);
+    	        /*double[] dj    = cplex.getReducedCosts(var[0]);
     	        double[] pi    = cplex.getDuals(rng[0]);
     	        double[] slack = cplex.getSlacks(rng[0]);*/
 
-    	    	
     	    	if(this.verbose){
     	    		System.out.println("Solution status = " + cplex.getStatus());
     	    		System.out.println("Solution value  = " + cplex.getObjValue());
     	    	}
     	        int ncols = cplex.getNcols();
-    	        System.out.println("ncols = "+ncols);
     	        if(this.verbose) System.out.println("Optimal Prices");
-    	        for (int j = 0; j < this.market.getNumberUsers(); j++) {
+    	        for (int j = 0; j < ncols; ++j) {
     	        	//System.out.println("Column: " + j +" Value = "+ y[j] +" Reduced cost = "+dj[j]);
-    	        	if(this.verbose){
-    	        		System.out.println("P("+j+") = " + LP_Prices[j]);
-    	        	}
-    	        	//envyFreePrices[j] = y[j];
+    	        	if(this.verbose) System.out.println("P("+j+") = " + y[j]);
+    	        	envyFreePrices[j] = y[j];
     	        }
-    	        for(int j = 0; j<this.market.getNumberUsers(); j++){
-    	        	if(this.verbose){
-    	        		System.out.println("Alpha("+j+") = " + Alphas[j]);    	        		
-    	        	}
-    	        } 
 
-
-    	        System.exit(0);
+    	        /*int nrows = cplex.getNrows();
+    	        for (int i = 0; i < nrows; ++i) {
+    	        System.out.println("Row   : " + i + " Slack = " + slack[i] + " Pi = " + pi[i]);
+    	        }*/
     	        return envyFreePrices;
     	    }
 		} catch (IloException e) {

@@ -40,13 +40,13 @@ public class Waterfall {
             int i = 0;
 
             while (i < start.campaigns.length){
-                if(modifyableGame.campaigns[i].numImpressions == 0){
+                if(modifyableGame.campaigns[i].getNumImpressions() == 0){
                     isCampaignFeasible[i] = false;
                     i++;
                     continue;
                 }
                 int supply = calculateSupply(modifyableGame,i);
-                if(supply < modifyableGame.campaigns[i].numImpressions){
+                if(supply < modifyableGame.campaigns[i].getNumImpressions()){
                     isCampaignFeasible[i] = false;
                 }else{
                     isCampaignFeasible[i] = true;
@@ -59,7 +59,7 @@ public class Waterfall {
             i = 0;
 
             while (i < start.userSets.length){
-                if(modifyableGame.userSets[i].numUsers == 0){
+                if(modifyableGame.userSets[i].getNumUsers() == 0){
                     isUserSetEmpty[i] = true;
                 }else{
                     isUserSetEmpty[i] = false;
@@ -73,7 +73,7 @@ public class Waterfall {
             i = 0;
 
             while (i < start.userSets.length){
-                bids[i] = new BidSet(-1,modifyableGame.userSets[i].reserve);
+                bids[i] = new BidSet(-1,modifyableGame.userSets[i].getReserve());
                 i++;
             }
 
@@ -82,7 +82,7 @@ public class Waterfall {
             while(i < start.campaigns.length){
                 if(isCampaignFeasible[i]){
                     j = 0;
-                    double bidPrice = modifyableGame.campaigns[i].valuePerImpression;
+                    double bidPrice = modifyableGame.campaigns[i].getValuePerImpression();
                     while (j < modifyableGame.campaigns[i].connections.size()){
                         int connection = modifyableGame.campaigns[i].connections.get(j);
                         bids[connection].update(i,bidPrice);
@@ -105,8 +105,8 @@ public class Waterfall {
                 i++;
             }
 
-            int campaignRequiredImpressions = modifyableGame.campaigns[lowestSecondBid.highIndex].numImpressions;
-            int supplyAllowedImpressions = modifyableGame.userSets[lowestBidIndex].numUsers;
+            int campaignRequiredImpressions = modifyableGame.campaigns[lowestSecondBid.highIndex].getNumImpressions();
+            int supplyAllowedImpressions = modifyableGame.userSets[lowestBidIndex].getNumUsers();
 
             int allocated = Math.min(campaignRequiredImpressions,supplyAllowedImpressions);
             double bidprice = lowestSecondBid.secondValue;
@@ -115,13 +115,15 @@ public class Waterfall {
                 bidprice = Math.min(lowestSecondBid.highValue,minObservedPrices[lowestSecondBid.highIndex]);
             }
 
-            modifyableGame.userSets[lowestBidIndex].numUsers -= allocated;
+            //modifyableGame.userSets[lowestBidIndex].numUsers -= allocated;
+            modifyableGame.userSets[lowestBidIndex].subtractFromNumUser(allocated);
+            
             modifyableGame.campaigns[lowestSecondBid.highIndex].modifyValuesBy(allocated,bidprice);
 
             i = 0;
 
-            while(i < modifyableGame.userSets[lowestBidIndex].connections.size()){
-                int campaignIndex = modifyableGame.userSets[lowestBidIndex].connections.get(i);
+            while(i < modifyableGame.userSets[lowestBidIndex].getConnections().size()){
+                int campaignIndex = modifyableGame.userSets[lowestBidIndex].getConnections().get(i);
                 minObservedPrices[campaignIndex] = Math.min(minObservedPrices[campaignIndex],bidprice);
                 i++;
             }
@@ -139,7 +141,7 @@ public class Waterfall {
         int i = 0;
         while(i < target.connections.size()){
             int thisUserSet = target.connections.get(i);
-            count += game.userSets[thisUserSet].numUsers;
+            count += game.userSets[thisUserSet].getNumUsers();
             i++;
         }
 

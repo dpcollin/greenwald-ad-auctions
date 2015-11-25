@@ -333,20 +333,20 @@ $$B \coloneqq \forall \Campaign_{j}:  \text{ If } \AllocationMatrixEntry_{*\Camp
 \State bundle := 0, cost := 0
 \While{ bundle $< \Impressions_\CampaignIndex$ and $U$ not empty}
 \State $\User_\UserIndex = \Users.$pop
-\State bundle = bundle + $\NumberOfUsers_\UserIndex$
-\State price = price + $\Price_\UserIndex \cdot \NumberOfUsers_\UserIndex$
+\State bundle = bundle + $\User_\UserIndex.\NumberOfUsers_\UserIndex$
+\State cost = cost + $(\User_\UserIndex.\Price_\UserIndex) * (\User_\UserIndex.\NumberOfUsers_\UserIndex)$
 \EndWhile
-\If{ bundle $\ge \Impressions_\CampaignIndex$ and price $<\Reward_\CampaignIndex$}
-\State \textbf{return} true
-\Else
+\If{ bundle $\ge \Impressions_\CampaignIndex$ and cost $<$ cost for $\Campaign_\CampaignIndex$ current bundle}
 \State \textbf{return} false
+\Else
+\State \textbf{return} true
 \EndIf
 \EndProcedure
 \end{algorithmic}
 \end{algorithm}
 
 The worst case performance of this heuristic is linear in the size of the user set, i.e., $O(\CardinalityUsers)$.
-
+\newpage
 \subsection*{Single user-impression market}
 
 \begin{tcolorbox}[colback=green!5,colframe=green!40!black,title=Definition: single user-impression market]

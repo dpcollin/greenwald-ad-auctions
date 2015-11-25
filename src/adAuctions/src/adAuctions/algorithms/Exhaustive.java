@@ -63,7 +63,7 @@ public class Exhaustive {
 
         double maxValHere = value;
         for (int i = campaign; i < game.campaigns.length; i++) {
-            maxValHere += game.campaigns[i].totalValue;
+            maxValHere += game.campaigns[i].getReward();
         }
 
         if(maxValHere < this.maxValue){
@@ -77,9 +77,9 @@ public class Exhaustive {
             boolean[] clonedIsUserTaken = Arrays.copyOf(isUserTaken,isUserTaken.length);
             double newValue = value;
             if(clonedIsUserTaken[userSet] == false){
-                clonedSol[campaign][userSet] = new Allocation(game.campaigns[campaign].valuePerImpression,1);
+                clonedSol[campaign][userSet] = new Allocation(game.campaigns[campaign].getValuePerImpression(),1);
                 clonedIsUserTaken[userSet] = true;
-                newValue += game.campaigns[campaign].valuePerImpression;
+                newValue += game.campaigns[campaign].getValuePerImpression();
             }else{
                 continue;
             }

@@ -2,7 +2,7 @@ package adAuctions.algorithms.linearp.test;
 
 import java.io.IOException;
 
-import adAuctions.algorithms.linearp.Latex;
+import adAuctions.graphs.Latex;
 
 public class Main {
 	

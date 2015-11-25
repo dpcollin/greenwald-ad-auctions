@@ -3,10 +3,7 @@ package adAuctions.algorithms.linearp.test;
 import java.util.ArrayList;
 
 import adAuctions.algorithms.linearp.EfficientAllocationLinearP;
-import adAuctions.structures.Campaign;
-import adAuctions.structures.Connection;
 import adAuctions.structures.Market;
-import adAuctions.structures.UserSet;
 
 
 public class EfficientAllocationTesting{
@@ -14,7 +11,7 @@ public class EfficientAllocationTesting{
 		Market M = new Market(3,3,1,100,1,1,3,3,1,1,1.0);
 		M.setConnectionsMatrix();
 		EfficientAllocationLinearP eff = new EfficientAllocationLinearP(M);
-		ArrayList<double[][]> efficientAllocations = eff.Solve();
+		ArrayList<int[][]> efficientAllocations = eff.Solve();
 		System.out.println("\n" + M);
 		System.out.println("We found "+efficientAllocations.size()+" many efficient allocations");
 		

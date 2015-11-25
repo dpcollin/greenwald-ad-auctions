@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import adAuctions.algorithms.Exhaustive;
-import adAuctions.algorithms.linearp.EnvyFreePricesLinearP;
-import adAuctions.algorithms.linearp.EnvyFreePricesLinearPAlpha;
-import adAuctions.algorithms.linearp.LinearP;
+import adAuctions.algorithms.linearp.singleusermarket.EnvyFreePricesLinearP;
+import adAuctions.algorithms.linearp.singleusermarket.EnvyFreePricesLinearPAlpha;
+import adAuctions.algorithms.linearp.singleusermarket.LinearP;
 import adAuctions.structures.Allocation;
 import adAuctions.structures.Market;
 
@@ -79,6 +79,12 @@ public class MarketFactory {
 						System.out.println("There are NO envy-free prices for this market:" + market);
 						return false;
 					}
+					if(market.areAllCampaignsEnvyFree(envyFreePrices)){
+						System.out.println("Market is Envy-Free!");
+					}else{
+						System.out.println("Market is NOT Envy-Free!");
+					}
+					System.exit(0);
 				}
 			}
 		}else{
@@ -163,7 +169,7 @@ public class MarketFactory {
 				/*
 				 * How many times to repeat each experiment
 				 */
-				double connectivity = 0.1;
+				double connectivity = 0.5;
 				for(int k=0;k<repeatExperiments;k++){
 					/*
 					 * For each connectivity level perform numExperiments number of experiments
