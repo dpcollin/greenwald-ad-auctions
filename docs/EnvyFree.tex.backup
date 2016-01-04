@@ -380,19 +380,12 @@ $\AllocationMatrixEntry_{*\CampaignIndex} > \textbf{0}$.
  over all feasible allocations is 0.  Since $\AllocationMatrixEntry_{*\CampaignIndex} = \textbf{0}$ implies $v_j(\AllocationMatrixEntry_{*\CampaignIndex}) - p_\CampaignIndex(\AllocationMatrixEntry_{*\CampaignIndex}) = 0$, we have that $\AllocationMatrixEntry_{*\CampaignIndex} \in \arg \max\limits_{\AllocationMatrix' \in F} \{ v_j(\AllocationMatrixEntry_{*\CampaignIndex}') - p_\CampaignIndex(\AllocationMatrixEntry_{*\CampaignIndex}') \}$
 \item[(2)] Suppose $\AllocationMatrixEntry_{*\CampaignIndex} > \textbf{0}$. 
 Condition A implies that $$\sum\limits_{i=1}^\CardinalityUsers \AllocationMatrixEntry_{ij}\Price_{i} < \Reward_j \iff p_\CampaignIndex(\AllocationMatrixEntry_{*\CampaignIndex}) < v_j(\AllocationMatrixEntry_{*\CampaignIndex}) \iff v_j(\AllocationMatrixEntry_{*\CampaignIndex}) - p_\CampaignIndex(\AllocationMatrixEntry_{*\CampaignIndex}) > 0$$
-In particular this means that $\max\limits_{\AllocationMatrix' \in F} \{ v_j(\AllocationMatrixEntry_{*\CampaignIndex}') - p_\CampaignIndex(\AllocationMatrixEntry_{*\CampaignIndex}') \} > 0$. (*)\\
+In particular this means that $\max\limits_{\AllocationMatrix' \in F} \{ v_j(\AllocationMatrixEntry_{*\CampaignIndex}') - p_\CampaignIndex(\AllocationMatrixEntry_{*\CampaignIndex}') \} > 0$.\\
 Now, suppose for a contradiction that 
 $$\AllocationMatrixEntry_{*\CampaignIndex} \notin \arg \max_{\AllocationMatrix' \in F} \{ v_j(\AllocationMatrixEntry_{*\CampaignIndex}') - p_\CampaignIndex(\AllocationMatrixEntry_{*\CampaignIndex}') \}$$
 By assumption there exists a feasible allocation $Y \in F$ such that 
 $$y_{*\CampaignIndex} \in \arg \max_{\AllocationMatrix' \in F} \{ v_j(\AllocationMatrixEntry_{*\CampaignIndex}') - p_\CampaignIndex(\AllocationMatrixEntry_{*\CampaignIndex}') \}$$
-Note that $y_{*\CampaignIndex} > \textbf{0}$ since $\Campaign_\CampaignIndex$ is satisfiable. 
  If $Y$ satisfies condition A and compact condition, then we are done. Otherwise, suppose it does not satifies either condition A or compact condition.
- \begin{enumerate}
-  \item[] If $Y$ does not satisfy condition A, then $y_{*j}>\textbf{0} \implies  \sum\limits_{i=1}^\CardinalityUsers y_{ij}\Price_{i} > \Reward_j \iff p_\CampaignIndex(y_{*\CampaignIndex}) > v_j(y_{*\CampaignIndex}) \iff  v_j(y_{*\CampaignIndex}) - p_\CampaignIndex(y_{*\CampaignIndex}) < 0$ contradicting (*).
-  \item[] If $Y$ does not satisfy the compact condition, then there exists $\User_k$ such that $y_{kj} < \NumberOfUsers_k$ and $\Price_\UserIndex > \Price_k$. But then $Y$
-  is not a maximizer since we can construct a better bundle (see Appendix). 
- \end{enumerate}
-
 \end{enumerate}
 
 

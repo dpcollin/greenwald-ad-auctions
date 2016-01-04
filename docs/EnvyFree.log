@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2015/dev/Debian) (preloaded format=pdflatex 2015.9.1)  25 NOV 2015 09:43
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2015/dev/Debian) (preloaded format=pdflatex 2015.9.1)  4 JAN 2016 16:33
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -858,17 +858,17 @@ Underfull \hbox (badness 10000) in paragraph at lines 308--309
  []
 
 [6]
-Underfull \hbox (badness 10000) in paragraph at lines 321--323
+Underfull \hbox (badness 10000) in paragraph at lines 339--341
 
  []
 
-[7] [8]
-Overfull \hbox (5.47144pt too wide) detected at line 423
+[7] [8] [9]
+Overfull \hbox (5.47144pt too wide) detected at line 473
 []
  []
 
-[9]
-Overfull \hbox (18.85748pt too wide) in paragraph at lines 448--451
+[10]
+Overfull \hbox (18.85748pt too wide) in paragraph at lines 498--501
 \OT1/cmr/m/n/12 (\OML/cmm/m/it/12 FYH; \OT1/cmr/m/n/12 2))\OML/cmm/m/it/12 ; u[
 ] \OT1/cmr/m/n/12 = (\OML/cmm/m/it/12 MYH; \OT1/cmr/m/n/12 1))$ and $\OML/cmm/m
 /it/12 C \OT1/cmr/m/n/12 = (\OML/cmm/m/it/12 c[] \OT1/cmr/m/n/12 = (\OML/cmm/m/
@@ -880,24 +880,24 @@ t/12 FYH; \OT1/cmr/m/n/12 1\OML/cmm/m/it/12 ; \OT1/cmr/m/n/12 10))\OML/cmm/m/it
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 456--462
+Underfull \hbox (badness 10000) in paragraph at lines 506--512
 
  []
 
-[10]
-Underfull \hbox (badness 10000) in paragraph at lines 489--491
+[11]
+Underfull \hbox (badness 10000) in paragraph at lines 539--541
 
  []
 
 
-Overfull \hbox (1.0982pt too wide) in paragraph at lines 512--515
+Overfull \hbox (1.0982pt too wide) in paragraph at lines 562--565
 []$[]$\OT1/cmr/m/n/12 : $\OMS/cmsy/m/n/12 8\OML/cmm/m/it/12 c[]; u[] \OT1/cmr/m
 /n/12 : []0 \OML/cmm/m/it/12 < x[] < N[][] []$\OT1/cmr/m/n/12 . 
  []
 
-[11] 
+[12] 
 AED: lastpage setting LastPage
-[12] (./EnvyFree.aux) ) 
+[13] (./EnvyFree.aux) ) 
 Here is how much of TeX's memory you used:
  17905 strings out of 493105
  366089 string characters out of 6137073
@@ -919,10 +919,10 @@ s/type1/public/amsfonts/cm/cmsy6.pfb></usr/share/texlive/texmf-dist/fonts/type1
 /public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public
 /amsfonts/symbols/msam10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/
 amsfonts/symbols/msbm10.pfb>
-Output written on EnvyFree.pdf (12 pages, 169185 bytes).
+Output written on EnvyFree.pdf (13 pages, 173713 bytes).
 PDF statistics:
- 98 PDF objects out of 1000 (max. 8388607)
- 70 compressed objects within 1 object stream
+ 102 PDF objects out of 1000 (max. 8388607)
+ 73 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  13 words of extra memory for PDF output out of 10000 (max. 10000000)
 

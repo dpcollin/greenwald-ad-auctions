@@ -21,12 +21,12 @@ public class Main {
 		 * Prob of connection 0.65
 		 */
 		int numCam = 4;
-		int numUse = 2;
+		int numUse = 3;
 		UserSet[] U = new UserSet[numUse];
 		Random R = new Random();
 		ArrayList<Connection> c = new ArrayList<Connection>();
 		for(int i=0;i<numUse;i++){
-			U[i] = new UserSet(1);
+			U[i] = new UserSet(3);
 			for(int j=0;j<numCam;j++){
 				if(R.nextDouble()<0.5){
 					c.add(new Connection(j,i));
@@ -35,7 +35,7 @@ public class Main {
 		}
 		Campaign[] C = new Campaign[numCam];
 		for(int j=0;j<numCam;j++){
-			C[j] = new Campaign(1,(j+1)*10);
+			C[j] = new Campaign(4,(j+1)^2);
 		}
 		Connection[] Connections = new Connection[c.size()];
 		Connections = c.toArray(Connections);
