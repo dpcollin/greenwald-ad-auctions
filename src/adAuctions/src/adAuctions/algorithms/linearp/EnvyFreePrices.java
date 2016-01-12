@@ -15,7 +15,7 @@ public class EnvyFreePrices {
 	/*
 	 * Boolean to control whether or not to output.
 	 */
-	protected boolean verbose = true;
+	protected boolean verbose = false;
 	/*
 	 * The market for which we are going to build the linear
 	 * programming solution
@@ -127,16 +127,17 @@ public class EnvyFreePrices {
 	 * This method generate the compact conditions.
 	 */
 	protected void generateCompactConditions() throws IloException{
+		if(this.verbose) System.out.println("--- Start generate Compact Conditions ---");
 		for(int i=0;i<this.market.getNumberUsers();i++){
 			for(int j=0;j<this.market.getNumberCampaigns();j++){
 				if(this.market.allocationMatrixEntry(i, j) > 0){
-					System.out.println(i+","+j);
+					if(this.verbose) System.out.println("Entry: "+i+","+j);
 					/*
 					 * In this case we have to add a condition for the compact condition
 					 */
 					for(int k=0;k<this.market.getNumberUsers();k++){
 						//If you are connected to this campaign and you don't get all of this campaign
-						System.out.println("\t"+k+","+j);
+						if(this.verbose) System.out.println("\t"+k+","+j);
 						if(i!=k && this.market.isConnected(k, j) && this.market.allocationMatrixEntry(k, j) < this.market.getUser(k).getNumUsers()){
 							if(this.verbose){
 								System.out.println("Add compact condition for user "+k+" on campaign " + j + ", where x_{"+k+j+"} = " + this.market.allocationMatrixEntry(k, j));
@@ -151,7 +152,32 @@ public class EnvyFreePrices {
 					}
 				}
 			}
-		}	
+		}
+		if(this.verbose) System.out.println("--- End generate Compact Conditions ---");		
+	}
+	
+	/*
+	 * This method generate the none conditions.
+	 * For all i,j: If x_ij=0 then For all k: if (u_k,c_j)\in E then P_k >= R_j/I_j
+	 */
+	protected void generateNoneConditions() throws IloException{
+		if(this.verbose) System.out.println("--- Start generate None Conditions ---");
+		for(int i=0;i<this.market.getNumberUsers();i++){
+			for(int j=0;j<this.market.getNumberCampaigns();j++){
+				if(this.market.allocationMatrixEntry(i, j) == 0){
+					if(this.verbose) System.out.println("Entry: "+i+","+j);
+					for(int k=0;k<this.market.getNumberUsers();k++){
+						if(this.market.isConnected(k, j)){
+							this.linearConstrains.add(this.cplex.addLe(
+																		this.cplex.prod(-1.0, 	this.prices[k]), 
+																		-1.0 * (this.market.campaigns[j].getReward() / this.market.campaigns[j].getNumImpressions())
+																		));						
+						}						
+					}
+				}
+			}
+		}
+		if(this.verbose) System.out.println("--- End generate Compact Conditions ---");
 	}
 	
 	/*
@@ -168,7 +194,7 @@ public class EnvyFreePrices {
 	 		ub[i] = Double.MAX_VALUE;
 	 		objvals[i] = 1.0;
 	 	}
-	 	System.out.println("generateAlphaObjective " + this.market.getNumberUsers());
+	 	if(this.verbose) System.out.println("generateAlphaObjective " + this.market.getNumberUsers());
 	 	/* Alpha variables */
 	 	this.alphas  = this.cplex.numVarArray(this.market.getNumberUsers(), lb, ub);
 	    this.var[0] = this.alphas;
@@ -205,9 +231,10 @@ public class EnvyFreePrices {
 		 	
 		 	this.generateVariablesAndObjective();
 			this.generateConditionA();
-			this.generateConditionB();
+			//this.generateConditionB();
 			//this.generateConditionC();
 		 	this.generateCompactConditions();
+		 	this.generateNoneConditions();
 		 	
 		    rng[0] = new IloRange[this.linearConstrains.size()];
 		    if(this.verbose) System.out.println("\n***Total Conditions:" + this.linearConstrains.size()+"*******");
@@ -221,7 +248,7 @@ public class EnvyFreePrices {
 		    		System.out.println("Solution value  = " + cplex.getObjValue());
 		    	}
 		        int ncols = cplex.getNcols();
-		        System.out.println("ncols = "+ncols);
+		        if(this.verbose) System.out.println("ncols = "+ncols);
 		        if(this.verbose) System.out.println("Optimal Prices");
 		        for (int j = 0; j < this.market.getNumberUsers(); j++) {
 		        	if(this.verbose){

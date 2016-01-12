@@ -1,12 +1,75 @@
 package adAuctions.test;
 
+import ilog.cplex.IloCplex;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import adAuctions.algorithms.*;
 import adAuctions.structures.*;
+import adAuctions.algorithms.linearp.EfficientAllocationLinearP;
+import adAuctions.algorithms.linearp.EnvyFreePrices;
+import adAuctions.algorithms.linearp.singleusermarket.HungarianAlgorithm;
+import adAuctions.algorithms.linearp.singleusermarket.LinearP;
 
 public class Main {
 
     public static void main(String[] args) {
-	    Market newGame = new Market(7,7,1,10,1,1,7,7,1,1,.5);
+    	
+    	
+    	int actualMarketTested = 0, totalMarkets = 0;
+        for(int users=3;users<30;users++){
+        	for(int camp=3;camp<30;camp++){
+        		double con = 0.0;
+        		for(int connectivity=0;connectivity<10;connectivity++){
+        			con += 0.1;
+        			totalMarkets++;
+        			System.out.println("users = "+ users + ",camp = " + camp + ", con = " + con);
+    	
+		Market M = new Market(	3, /*minNumCampaigns*/
+				camp, 	/*maxNumCampaigns*/
+				1,		/*minPricePerCampaign*/
+				100,	/*maxPricePerCampaign*/
+				1, 		/*minImpressionsPerCampaign*/ 
+				5, 		/*maxImpressionsPerCampaign*/
+				2, 		/*minNumUserSets*/
+				users, 		/* maxNumUserSets*/
+				1, 		/*minUsersPerSet*/
+				5,		/*maxUsersPerSet*/
+				con);	/*ratioOfConnections*/    	
+    	    			
+    	if(M.connections[0] != null){    	
+    		M.setConnectionsMatrix();
+    		EfficientAllocationLinearP E = new EfficientAllocationLinearP(M);
+    		ArrayList<int[][]> efficAllocations =  E.Solve();
+    		if(efficAllocations.size()>0){
+				M.setAllocationMatrix(efficAllocations.get(0));
+				try{
+					double[] envyFreePrices = new EnvyFreePrices(M).Solve();
+					actualMarketTested++;
+			    	if(!M.areAllCampaignsEnvyFree(envyFreePrices)){
+			    		System.out.println("******************Some campaign is envy**************");
+			    		System.out.println(M);
+			    		for(int i=0;i<envyFreePrices.length;i++){
+			        		System.out.println("P("+i+") = " + envyFreePrices[i]);
+			    		}
+			    		System.exit(0);
+			    	}
+				}catch(Exception e){
+					//System.out.println("IloCplex.UnknownObjectException");
+				}
+    		}
+    	}		
+    	
+		//System.out.println("\n" + M);
+        		}
+        	}
+        }
+
+    	System.out.println("There were "+actualMarketTested+" actual Markets Tested out of" + totalMarkets + "total Markets");
+    	
+    	
+	    /*Market newGame = new Market(7,7,1,10,1,1,7,7,1,1,.5);
         returnSet returnSet = Waterfall.WaterfallAlgorithm(newGame);
         Exhaustive exhaustive = new Exhaustive();
         //ArrayList<Allocation[][]> exhaustiveSet = exhaustive.search(newGame);
@@ -18,7 +81,7 @@ public class Main {
             System.out.printf("Exhaustive Allocation %d\n", i);
             printAllocation2D(exhaustiveSet.get(i));
         }
-        */
+        
         System.out.println("Waterfall Value");
         double WaterfallValue = getAllocationValue(newGame,returnSet.allocations);
         System.out.println(WaterfallValue);
@@ -26,9 +89,88 @@ public class Main {
         System.out.println(exhaustive.maxValue);
         System.out.println("Waterfall Efficiency Ratio");
         System.out.println(WaterfallValue/exhaustive.maxValue);
-        System.out.println("hello");
+        System.out.println("hello");*/
+    	
+    	
+    	
+    	/*
+    for(int users=5;users<10;users++){
+    	for(int camp=5;camp<10;camp++){
+    		double con = 0.0;
+    		for(int connectivity=0;connectivity<10;connectivity++){
+    			con += 0.1;
+    			System.out.println("users = "+ users + ",camp = " + camp + ", con = " + con);
+    	Market M = new Market(users,users,1,100,1,1,camp,camp,1,1,con);
+		M.setConnectionsMatrix();
+		EfficientAllocationLinearP eff = new EfficientAllocationLinearP(M);
+		ArrayList<int[][]> efficientAllocations = eff.Solve();
+		//System.out.println("\n" + M);
+		System.out.println("We found "+efficientAllocations.size()+" many efficient allocations");
+		
+		double reward = 0.0, previous_reward = 0.0;
+		for(int l=0;l<efficientAllocations.size();l++){
+			System.out.print("Solution #"+l + ": ");
+			for (int i=0; i<M.getNumberUsers(); i++){
+				for (int j=0; j<M.getNumberCampaigns(); j++){
+					//System.out.print(efficientAllocations.get(l)[i][j]);
+					//System.out.print(" ");
+					reward += M.campaigns[j].getReward() * efficientAllocations.get(l)[i][j];
+				}
+				//System.out.print("\n");
+			}
+			System.out.println("Total Reward = " + reward);
+			if(l > 0){
+				if(Math.abs(reward - previous_reward)> 0.1){
+					System.out.println("OOpsss -> reward = " + reward + ", previous_reward = "+previous_reward);
+					System.exit(0);
+				}
+			}
+			previous_reward = reward;
+			reward = 0.0;
+		}		    	
+        
+        double[][] costMatrix = new double[M.getNumberUsers()][M.getNumberCampaigns()];        
+        for(int i=0;i<M.getNumberUsers();i++){
+        	for(int j=0;j<M.getNumberCampaigns();j++){
+        		if(M.isConnected(i, j)){
+        			costMatrix[i][j] =-1.0 * M.getCampaign(j).getReward();
+        		}else{
+        			costMatrix[i][j] = Double.MAX_VALUE;
+        		}
+        	}
+        }
+        //Main.printMatrix(costMatrix);
+         HungarianAlgorithm H = new HungarianAlgorithm(costMatrix);
+         int[] result = H.execute();
+         double totalRewardHungarian = 0.0;
+         for(int i=0;i<result.length;i++){
+        	 //System.out.println(result[i]);
+        	 //If the assignment is possible and the user is actually connected to the campaigns
+        	 if(result[i] > -1 && M.isConnected(i, result[i])){
+        		 totalRewardHungarian += M.getCampaign(result[i]).getReward();
+        	 }
+         }
+        System.out.println("Total Hungarian reward: " + totalRewardHungarian);
+        if(Math.abs(previous_reward - totalRewardHungarian) > 0.1){
+			System.out.println("OOpsss -> previous_reward = " + previous_reward + ", totalRewardHungarian = "+totalRewardHungarian);
+			System.exit(0);
+        	
+        }
+    		}
+    	}
+    }*/
+        
     }
 
+    public static void printMatrix(double[][] matrix){
+    	for(int i=0;i<matrix.length;i++){
+    		for(int j=0;j<matrix[0].length;j++){
+    			System.out.print(matrix[i][j] + "\t");
+    		}
+    		System.out.print("\n");
+    	}
+    }
+    
     public static void printAllocation2D(Allocation[][] allocations){
         int x = allocations.length;
         int y = allocations[0].length;

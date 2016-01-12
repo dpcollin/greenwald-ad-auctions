@@ -268,13 +268,13 @@ public class Market {
      * Heuristic to check envy-free-ness for a campaign. 
      */
     public boolean isCampaignEnvyFree(PriorityQueue<UserSet> queue, int campaignIndex){
-    	System.out.println("Heuristic for campaign:" + campaignIndex + ", check this many users:" + queue.size());
+    	//System.out.println("Heuristic for campaign:" + campaignIndex + ", check this many users:" + queue.size());
     	double cost = 0.0;
     	int impressionsNeeded = this.campaigns[campaignIndex].numImpressions;
     	while (impressionsNeeded > 0 && queue.size() != 0){
 			UserSet u = queue.remove();
 			if(this.isConnected(u.getIndex(), campaignIndex)){
-				System.out.println(u);
+				//System.out.println(u);
 				if(u.getNumUsers()>= impressionsNeeded){
 					cost += impressionsNeeded*u.getPrice();
 					impressionsNeeded = 0;
@@ -284,14 +284,14 @@ public class Market {
 				}
 			}
 		}
-    	System.out.println("impressionsNeeded = "+impressionsNeeded);
-    	System.out.println("cost of cheapest bundle = "+cost);
-    	System.out.println("cost of current  bundle = "+getBundleCost(campaignIndex));
-    	System.out.println("nbr  of current  bundle = "+getBundleNumber(campaignIndex));
-    	System.out.println("reward of this campaign = "+this.campaigns[campaignIndex].getReward());
+    	//System.out.println("impressionsNeeded = "+impressionsNeeded);
+    	//System.out.println("cost of cheapest bundle = "+cost);
+    	//System.out.println("cost of current  bundle = "+getBundleCost(campaignIndex));
+    	//System.out.println("nbr  of current  bundle = "+getBundleNumber(campaignIndex));
+    	//System.out.println("reward of this campaign = "+this.campaigns[campaignIndex].getReward());
     	//if(impressionsNeeded > 0 || getBundleCost(campaignIndex) <= cost){
     	if(impressionsNeeded > 0){ //If you cannot be satisfied, you are inmediately envy-free
-    		System.out.println("true");
+    		//System.out.println("true");
     		return true;
     	}else{
     		if(getBundleNumber(campaignIndex) >= this.campaigns[campaignIndex].getNumImpressions()){//This campaign was satisfied
@@ -311,7 +311,7 @@ public class Market {
      * Check if this whole market is envy-free
      */
     public boolean areAllCampaignsEnvyFree(double[] prices){
-		System.out.println("Check Heuristic For Envy-free-ness");
+		//System.out.println("Check Heuristic For Envy-free-ness");
     	/*
     	 * Construct a priority queue with users where the priority is price in ascending order.
     	 */
@@ -378,10 +378,18 @@ public class Market {
     	}
     }
     
-    protected String printCampaignsRewards(){
+    protected String printCampaignsInfo(){
     	String ret = "";
     	for(int j=0;j<this.getNumberCampaigns();j++){
-    		ret += "\nR("+j+") = "+ this.campaigns[j].totalValue;
+    		ret += "\nR("+j+") = "+ this.campaigns[j].totalValue + ";\t I("+j+") = " + this.campaigns[j].numImpressions;
+    	}
+    	return ret;
+    }
+    
+    protected String printUsersInfo(){
+    	String ret = "";
+    	for(int i=0;i<this.getNumberUsers();i++){
+    		ret += "\nN("+i+") = " + this.userSets[i].numUsers;
     	}
     	return ret;
     }
@@ -391,7 +399,8 @@ public class Market {
     	
     	return  "NbrCampaigns:\t"+this.getNumberCampaigns() + "\n" +
     			"NbrUsers:\t"+this.getNumberUsers() + "\n" +
-    			"Campaigns Rewards" + this.printCampaignsRewards() + "\n" +
+    			"Campaigns Rewards \t\t Campaigns Demand" + this.printCampaignsInfo() + "\n" +
+    			"Users Supply" + this.printUsersInfo() + "\n" +
     			"Connections Matrix:\t"+this.printConnectionsMatrix() + "\n" +
     			"Allocation Matrix:\t" + this.printAllocationMatrix();
     }
