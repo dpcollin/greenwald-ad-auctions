@@ -79,7 +79,7 @@ public class MarketFactory {
 						System.out.println("There are NO envy-free prices for this market:" + market);
 						return false;
 					}
-					if(market.areAllCampaignsEnvyFree(envyFreePrices)){
+					if(market.areAllCampaignsEnvyFree(envyFreePrices)==-1){
 						System.out.println("Market is Envy-Free!");
 					}else{
 						System.out.println("Market is NOT Envy-Free!");

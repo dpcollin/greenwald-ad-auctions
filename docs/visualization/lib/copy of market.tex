@@ -1,0 +1,92 @@
+\documentclass[12pt,letterpaper]{article}
+\usepackage{fullpage}
+\usepackage[top=2cm, bottom=4.5cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage{amsmath,amsthm,amsfonts,amssymb,amscd}
+\usepackage{lastpage}
+\usepackage{enumerate}
+\usepackage{fancyhdr}
+\usepackage{mathrsfs}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{mathtools}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{tcolorbox}
+\usetikzlibrary{positioning,chains,fit,shapes,calc}
+%% download this package and put it in the same directory as this file
+%\usepackage{clrscode3e}
+\setlength{\parindent}{0.0in}
+\setlength{\parskip}{0.05in}
+
+\newcommand{\Campaign}{c}
+\newcommand{\CampaignIndex}{j}
+\newcommand{\Campaigns}{C}
+\newcommand{\CardinalityCampaigns}{m}
+\newcommand{\User}{u}
+\newcommand{\UserIndex}{i}
+\newcommand{\Users}{U}
+\newcommand{\CardinalityUsers}{n}
+\newcommand{\Market}{M}
+\newcommand{\Impressions}{I}
+\newcommand{\Reward}{R}
+\newcommand{\NumberOfUsers}{N}
+\newcommand{\Edges}{E}
+\newcommand{\Allocation}{A}
+\newcommand{\Price}{P}
+\newcommand{\AllocationMatrix}{X}
+\newcommand{\AllocationMatrixEntry}{x}
+
+
+
+\begin{document}
+\definecolor{myblue}{RGB}{80,80,160}
+\definecolor{mygreen}{RGB}{80,160,80}
+\definecolor{mywhite}{RGB}{255,255,255}
+
+
+\section*{Envy-Free Prices (as given by LP)}
+\subsection*{Parameters}
+\begin{enumerate}
+\item[] Number of Markets: 10
+\item[] Min. number of campaigns: 6
+\item[] Max. number of campaigns: 7
+\item[] Min. number of users: 6
+\item[] Max. number of users: 7
+\item[] Ratio of Connections: 0.1
+\end{enumerate}
+$$ \begin{tikzpicture}[thick, every node/.style={draw,circle}, fsnode/.style={fill=myblue}, ssnode/.style={fill=mygreen}, every fit/.style={ellipse,draw,inner sep=10pt,text width=2cm},-,shorten >= 3pt,shorten <= 3pt]
+% the vertices of U
+\begin{scope}[start chain=going below,node distance=7mm]
+\node[fsnode,on chain] (f0) [label=left: 70.64] {};
+\node[fsnode,on chain] (f1) [label=left: 70.08] {};
+\node[fsnode,on chain] (f2) [label=left: 70.64] {};
+\end{scope}
+% the vertices of C
+\begin{scope}[xshift=5cm,yshift=-0.1cm,start chain=going below,node distance=7mm]
+\node[ssnode,on chain] (s3) [label=right: \$163.55] {};
+\node[ssnode,on chain] (s4) [label=right: \$78.75] {};
+\node[ssnode,on chain] (s5) [label=right: \$99.96] {};
+\node[ssnode,on chain] (s6) [label=right: \$141.28] {};
+\node[ssnode,on chain] (s7) [label=right: \$30.78] {};
+\node[ssnode,on chain] (s8) [label=right: \$172.41] {};
+\node[ssnode,on chain] (s9) [label=right: \$274.40] {};
+\node[ssnode,on chain] (s10) [label=right: \$70.08] {};
+\node[ssnode,on chain] (s11) [label=right: \$47.23] {};
+\end{scope}
+% the set U
+\node [mywhite,fit=(f0) (f1) (f2) ] {};
+% the set C
+\node [mywhite,fit=(s3) (s4) (s5) (s6) (s7) (s8) (s9) (s10) (s11) ] {};% the edges
+\draw (f0) -- (s3);
+\draw[dotted] (f0) -- (s4);
+\draw[dotted] (f0) -- (s5);
+\draw[dotted] (f0) -- (s7);
+\draw[dotted] (f0) -- (s9);
+\draw (f1) -- (s5);
+\draw[dotted] (f1) -- (s8);
+\draw (f1) -- (s10);
+\draw[dotted] (f2) -- (s3);
+\draw (f2) -- (s6);
+\draw[dotted] (f2) -- (s7);
+\end{tikzpicture} $$
+\end{document}

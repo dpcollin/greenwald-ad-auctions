@@ -9,12 +9,85 @@ import adAuctions.algorithms.*;
 import adAuctions.structures.*;
 import adAuctions.algorithms.linearp.EfficientAllocationLinearP;
 import adAuctions.algorithms.linearp.EnvyFreePrices;
+import adAuctions.algorithms.linearp.EnvyFreePricesCompactCondition;
+import adAuctions.algorithms.linearp.LPSolution;
 import adAuctions.algorithms.linearp.singleusermarket.HungarianAlgorithm;
 import adAuctions.algorithms.linearp.singleusermarket.LinearP;
 
 public class Main {
 
-    public static void main(String[] args) {
+	public static void main(String[] args) {
+		
+        for(int users=3;users<30;users++){
+        	for(int camp=3;camp<30;camp++){
+        		double con = 0.0;
+        		for(int connectivity=0;connectivity<10;connectivity++){
+        			con += 0.1;
+        			System.out.println("users = "+ users + ",camp = " + camp + ", con = " + con);
+					Market M = new Market(	3, /*minNumCampaigns*/
+							camp, 	/*maxNumCampaigns*/
+							1,		/*minPricePerCampaign*/
+							100,	/*maxPricePerCampaign*/
+							1, 		/*minImpressionsPerCampaign*/ 
+							10, 		/*maxImpressionsPerCampaign*/
+							2, 		/*minNumUserSets*/
+							users, 		/* maxNumUserSets*/
+							1, 		/*minUsersPerSet*/
+							10,		/*maxUsersPerSet*/
+							con);	/*ratioOfConnections*/    	
+			    	if(M.connections[0] != null){
+			    		M.setConnectionsMatrix();
+			    		EfficientAllocationLinearP E = new EfficientAllocationLinearP(M);
+			    		ArrayList<int[][]> efficAllocations =  E.Solve();
+			    		if(efficAllocations.size()>0){
+							M.setAllocationMatrix(efficAllocations.get(0));
+							try{
+								LPSolution Solution = new EnvyFreePricesCompactCondition(M).Solve();
+								if(Solution.getStatus() == "Empty" || Solution.getStatus() == "Unknown" || Solution.getStatus() == "Infeasible"){
+									System.out.println("Something went wrong. Solution Status = " + Solution.getStatus());
+									System.out.println(M);
+									System.exit(-1);
+								}else if(Solution.getStatus() == "Unbounded"){
+									System.out.println("Solution Unbounded");
+									//System.out.println(M);
+									
+								}else{
+									System.out.println("Solution Status = " + Solution.getStatus());
+									double[] envyFreePrices = Solution.getPrices();
+									if(envyFreePrices.length > 0){
+										boolean pricenotzero = false;
+										for(int i=0;i<envyFreePrices.length;i++){
+											System.out.println("P("+i+") = " + envyFreePrices[i]);
+											
+											if(envyFreePrices[i]>0){
+												pricenotzero = true;
+											}
+										}
+										/*if(pricenotzero){
+											System.out.println(M);
+											System.exit(-1);											
+										}*/
+									}
+									if(M.areAllCampaignsEnvyFree(envyFreePrices)>=0){
+							    		System.out.println("******************Campaign "+M.areAllCampaignsEnvyFree(envyFreePrices)+" is envy**************");
+							    		System.out.println(M);
+							    		for(int i=0;i<envyFreePrices.length;i++){
+							        		System.out.println("P("+i+") = " + envyFreePrices[i]);
+							    		}
+							    		System.out.println(adAuctions.graphs.Latex.createLatexGraph(M, envyFreePrices));
+							    		System.exit(0);
+							    	}									
+								}
+							}catch(Exception e){
+								System.out.println("Exception - " + e);
+							}
+			    		}
+			    	}
+        		}
+        	}
+        }
+	}
+	public static void main2(String[] args) {
     	
     	
     	int actualMarketTested = 0, totalMarkets = 0;
@@ -47,7 +120,7 @@ public class Main {
 				try{
 					double[] envyFreePrices = new EnvyFreePrices(M).Solve();
 					actualMarketTested++;
-			    	if(!M.areAllCampaignsEnvyFree(envyFreePrices)){
+			    	if(M.areAllCampaignsEnvyFree(envyFreePrices)>=0){
 			    		System.out.println("******************Some campaign is envy**************");
 			    		System.out.println(M);
 			    		for(int i=0;i<envyFreePrices.length;i++){

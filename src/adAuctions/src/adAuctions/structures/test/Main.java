@@ -57,7 +57,7 @@ public class Main {
 				System.out.println("Envy-free prices");
 				Market.printPrices(envyFreePrices);
 			
-				if(M.areAllCampaignsEnvyFree(envyFreePrices)){
+				if(M.areAllCampaignsEnvyFree(envyFreePrices)==-1){
 					System.out.println("Everyone is happy");
 				}else{
 					System.out.println("Someone is not happy");

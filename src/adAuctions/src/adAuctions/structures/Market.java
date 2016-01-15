@@ -295,7 +295,9 @@ public class Market {
     		return true;
     	}else{
     		if(getBundleNumber(campaignIndex) >= this.campaigns[campaignIndex].getNumImpressions()){//This campaign was satisfied
-    			if(cost < getBundleCost(campaignIndex)){
+    			if(getBundleCost(campaignIndex) - cost > 0.01){
+    				System.out.println("cost = "+cost);
+    				System.out.println("current cost = "+getBundleCost(campaignIndex));
     				return false;
     			}
     			return true;
@@ -310,7 +312,7 @@ public class Market {
     /*
      * Check if this whole market is envy-free
      */
-    public boolean areAllCampaignsEnvyFree(double[] prices){
+    public int areAllCampaignsEnvyFree(double[] prices){
 		//System.out.println("Check Heuristic For Envy-free-ness");
     	/*
     	 * Construct a priority queue with users where the priority is price in ascending order.
@@ -326,11 +328,11 @@ public class Market {
     	 * Check that each campaign is envy-free for the previously constructed queue.
     	 */
     	for(int j=0;j<this.campaigns.length;j++){
-    		if(!this.isCampaignEnvyFree(new PriorityQueue<UserSet>(queue), j)){//Pass a copy of the queue each time...
-    			return false;
+    		if(!this.isCampaignBundleZero(j) && !this.isCampaignEnvyFree(new PriorityQueue<UserSet>(queue), j)){//Pass a copy of the queue each time...
+    			return j;
     		}
     	}
-    	return true;
+    	return -1;
     }
     /*
      * Just a helper function to print the allocation
